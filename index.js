@@ -13,7 +13,7 @@ function translate(c)
 	{
 	var tools = require(__dirname+'/lib/tools.js');
 	var channellist = require(__dirname+'/lib/channellist.json');
-	if (debug) {console.log('Luxtronik2: translating data');};
+	if (debug) {console.log('Homebridge-Luxtronik2: translating data');};
 	// translate dword to data type
 		var result = [];
 		for (var i=0;i< c.length; i++)
@@ -50,8 +50,6 @@ function translate(c)
 				}
 				// push to array
 			result.push(value);
-			// set state
-			// setState(channellist[i].name, value);
 			}
 		}
 		return result;
@@ -74,57 +72,50 @@ function Luxtronik2(log, config) {
 	this.name = config["name"];
 }
 
-
 Luxtronik2.prototype = {
 
   getTemperature: function(callback) {
     console.log("Luxtronik2 Sensor Triggered");
-	if (debug) {console.log('[Luxtronik2] getTemperature');};
-	// var self = this;
+	if (debug) {console.log('Homebridge-Luxtronik2: getTemperature');};
 	var net = require('net');
-	// var fs = require('fs');
 	var buffer = require('buffer');
 	var binary = require('binary');
-	// var io = require('socket.io-client');
-	// var Q = require('q');
-	// var co = require('co')
- 	var temp;
+	var temp;
 	var tools = require(__dirname+'/lib/tools.js');
-	if (debug) { console.log('[Luxtronik2]','host and port from config: ' + this.IP + ' ' + this.Port);};
-	// var deferred = Q.defer();
-
+	if (debug) { console.log('Homebridge-Luxtronik2: host and port from config: ' + this.IP + ' ' + this.Port);};
+	
 	var luxsock = net.connect({host:this.IP, port: this.Port});
 		/* handle error */
-		if (debug) {console.log("Luxtronik2: Going to connect");};
+		if (debug) {console.log("Homebridge-Luxtronik2: Going to connect");};
 		luxsock.on("error", function (data)
 		{
-			if (debug) {console.log('Luxtronik2 ' + data.toString());};
+			if (debug) {console.log('Homebridge-Luxtronik2: ' + data.toString());};
 			console.error(data.toString());
 			//stop();
 		});
 		/* handle timeout */
 		luxsock.on("timeout", function ()
 		{
-			if (debug) {console.log('Luxtronik2 connection timeout');};
+			if (debug) {console.log('Homebridge-Luxtronik2: connection timeout');};
 			console.warn("client timeout event");
 			//stop();
 		});
 		/* handle close */
 		luxsock.on("close", function ()
 		{
-			if (debug) {console.log("Luxtronik2 client close event");};
+			if (debug) {console.log("Homebridge-Luxtronik2: client close event");};
 			//stop();
 		});
 		/* handle end */
 		luxsock.on('end', function ()
 		{
-			if (debug) {console.log("Luxtronik2 client end event");};
+			if (debug) {console.log("Homebridge-Luxtronik2: client end event");};
 			//stop();
 		});
 		/* receive data */
 		luxsock.on('data', function(data)
 		{
-			if (debug) {console.log('Luxtronik2: reading data');};
+			if (debug) {console.log('Homebridge-Luxtronik2: reading data');};
 			var buf = new Buffer(data.length);
 			buf.write(data, 'binary');
 			/* luxtronik must confirm command */
@@ -135,7 +126,7 @@ Luxtronik2.prototype = {
 			var count = buf.readUInt32BE(8);
 			if (confirm != 3004)
 			{
-				if (debug) {console.log('luxtronik2: command not confirmed');};
+				if (debug) {console.log('Homebridge-luxtronik2: command not confirmed');};
 				stop();
 			}
 			else if (data.length==count*4+12)
@@ -150,7 +141,7 @@ Luxtronik2.prototype = {
 				var items = translate(calculated);
 				temp = items[5];
 				// deferred.resolve(luxsock);
-				if (debug) {console.log('Luxtronik2: data: ', temp);};
+				if (debug) {console.log('Homebridge-Luxtronik2: temperature data: ', temp);};
 				callback(null,temp);
 			}
 			luxsock.end();
@@ -158,7 +149,7 @@ Luxtronik2.prototype = {
 		// connected => get values
 		luxsock.on('connect', function()
 		{
-			if (debug) {console.log('luxtronik2: connected!');};
+			if (debug) {console.log('Homebridge-Luxtronik2: connected!');};
 			luxsock.setNoDelay(true);
 			luxsock.setEncoding('binary');
 			var buf = new Buffer(4);
@@ -167,25 +158,6 @@ Luxtronik2.prototype = {
 			buf.writeUInt32BE(0,0);
 			luxsock.write(buf.toString('binary'), 'binary');
 		});
-		// self.emit('data',temp);
-
-
-	if (debug) {console.log("Luxtronik2: goint to return value",temp);};
-	// if (debug) {console.log("Luxtronik2: goint to return data",data);};
-    // if (debug) {console.log("Luxtronik2: goint to return value",deferred.promise);};
-    
-	// callback(null,10);
-	
-	// callback(null,temp);
-    
-    /** superagent.get(this.temperature_url).then(function(response){
-		const body = response.body;
-		// console.log("body", body);
-		const sensordata = body.data.last_data.DA;
-		console.log("sensordata ", sensordata);
-		callback(null,sensordata);
-	}); 
-	**/
   },
 
   identify: function(callback) {
