@@ -1,6 +1,6 @@
 [![node](https://img.shields.io/node/v/gh-badges.svg)](https://img.shields.io/npm/dm/homebridge-luxtronik2.svg?style=flat)
-[![npm](https://img.shields.io/npm/dt/express.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
-[![npm](https://img.shields.io/npm/l/express.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
+[![npm](https://img.shields.io/npm/dt/homebridge-luxtronik2.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
+[![npm](https://img.shields.io/npm/l/homebridge-luxtronik2.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
 
 # homebridge-luxtronik2
 
