@@ -1,12 +1,6 @@
-[![npm][npm-image]][npm-url]
-[![downloads][downloads-image]][downloads-url]
-
 [![node](https://img.shields.io/node/v/gh-badges.svg)](https://img.shields.io/npm/dm/homebridge-luxtronik2.svg?style=flat)
-[npm-image]: https://img.shields.io/npm/v/homebridge-luxtronik2.svg?style=flat
-[npm-url]: https://npmjs.org/package/homebridge-luxtronik2
-[downloads-image]: https://img.shields.io/npm/dm/homebridge-luxtronik2.svg?style=flat
-[downloads-url]: https://npmjs.org/package/homebridge-luxtronik2
-
+[![npm](https://img.shields.io/npm/dt/express.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
+[![npm](https://img.shields.io/npm/l/express.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
 
 # homebridge-luxtronik2
 
