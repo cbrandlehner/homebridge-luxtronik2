@@ -1,0 +1,27 @@
+{
+    "bridge": 
+    {
+        "name": "Homebridge-Sample",
+        "username": "AA:AA:AA:AA:AA:AA",
+        "port": 51826,
+        "pin": "111-11-111"
+    },
+    
+    "description": "This is an example configuration file with all supported devices. You can use this as a template for creating your own configuration file containing devices you actually own.",
+
+    "platforms": 
+    [
+        
+    ],
+
+    "accessories": 
+    [
+        {
+            "accessory" : "homebridge-luxtronik2.temperature",
+            "service" : "outside_temp",
+            "name" : "Luxtronik2",
+            "IP" : "192.168.1.10",
+            "Port" : "8888"        
+        }
+   ]
+}

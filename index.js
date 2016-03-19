@@ -58,7 +58,7 @@ function translate(c)
 module.exports = function(homebridge){
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("homebridge-luxtronik2", "Luxtronik2", Luxtronik2);
+  homebridge.registerAccessory("homebridge-luxtronik2", "temperature", Luxtronik2);
 }
 
 /**
