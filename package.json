@@ -1,6 +1,6 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "scripts": {

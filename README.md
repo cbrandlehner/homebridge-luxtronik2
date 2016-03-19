@@ -1,3 +1,13 @@
+[![npm][npm-image]][npm-url]
+[![downloads][downloads-image]][downloads-url]
+
+[![node](https://img.shields.io/node/v/gh-badges.svg)](https://img.shields.io/npm/dm/homebridge-luxtronik2.svg?style=flat)
+[npm-image]: https://img.shields.io/npm/v/homebridge-luxtronik2.svg?style=flat
+[npm-url]: https://npmjs.org/package/homebridge-luxtronik2
+[downloads-image]: https://img.shields.io/npm/dm/homebridge-luxtronik2.svg?style=flat
+[downloads-url]: https://npmjs.org/package/homebridge-luxtronik2
+
+
 # homebridge-luxtronik2
 
 This plugin for Homebridge adds a temperature sensor information. The temperature is the outside temperature measured by a Luxtronik2 based heat pump controller (Siemens, Novelan, Wolf, Alpha Innotec).
