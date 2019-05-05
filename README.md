@@ -35,3 +35,7 @@ Updated versions of dependencies in package.json
 2019.18.2:
 
 Updated README.md
+
+2019.18.3:
+
+Fixed issue with negative temperatures showing as 0°C

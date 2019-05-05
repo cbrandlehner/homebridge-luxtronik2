@@ -68,8 +68,8 @@ function Luxtronik2(log, config) {
 	this.log = log;
 	this.IP = config["IP"];
 	this.Port = config["Port"];
-	// this.service = config["service"];
 	this.name = config["name"];
+  this.temperatureDisplayUnits = Characteristic.TemperatureDisplayUnits.CELSIUS;
 }
 
 Luxtronik2.prototype = {
@@ -80,7 +80,7 @@ Luxtronik2.prototype = {
 	var net = require('net');
 	var buffer = require('buffer');
 	var binary = require('binary');
-	var temp;
+	var temp = -99;
 	var tools = require(__dirname+'/lib/tools.js');
 	if (debug) { console.log('Homebridge-Luxtronik2: host and port from config: ' + this.IP + ' ' + this.Port);};
 
@@ -141,7 +141,9 @@ Luxtronik2.prototype = {
 				var items = translate(calculated);
 				temp = items[5];
 				// deferred.resolve(luxsock);
-				if (debug) {console.log('Homebridge-Luxtronik2: temperature data: ', temp);};
+        // for debug purpose overwriting temp with hardcoded values
+        // temp = parseFloat('-22.2');
+        if (debug) {console.log('Homebridge-Luxtronik2: temperature data: ', temp);};
 				callback(null,temp);
 			}
 			luxsock.end();
@@ -174,6 +176,8 @@ Luxtronik2.prototype = {
     var temperatureService = new Service.TemperatureSensor("Outside Temperature");
         temperatureService
           .getCharacteristic(Characteristic.CurrentTemperature)
+          .setProps({minValue: parseFloat("-50"),
+                     maxValue: parseFloat("100")})
           .on('get', this.getTemperature.bind(this));
 
     return [informationService, temperatureService];
