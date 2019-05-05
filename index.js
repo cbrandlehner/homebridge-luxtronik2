@@ -7,9 +7,9 @@ var stream = require('stream')
   , child;
 
 /* common code */
-var debug = true; // set true for more debugging info
+var debug = false; // set true for more debugging info
 
-function translate(c)	
+function translate(c)
 	{
 	var tools = require(__dirname+'/lib/tools.js');
 	var channellist = require(__dirname+'/lib/channellist.json');
@@ -53,7 +53,7 @@ function translate(c)
 			}
 		}
 		return result;
-	}	// function translate(c)	
+	}	// function translate(c)
 
 module.exports = function(homebridge){
   Service = homebridge.hap.Service;
@@ -68,7 +68,7 @@ function Luxtronik2(log, config) {
 	this.log = log;
 	this.IP = config["IP"];
 	this.Port = config["Port"];
-	this.service = config["service"];
+	// this.service = config["service"];
 	this.name = config["name"];
 }
 
@@ -83,7 +83,7 @@ Luxtronik2.prototype = {
 	var temp;
 	var tools = require(__dirname+'/lib/tools.js');
 	if (debug) { console.log('Homebridge-Luxtronik2: host and port from config: ' + this.IP + ' ' + this.Port);};
-	
+
 	var luxsock = net.connect({host:this.IP, port: this.Port});
 		/* handle error */
 		if (debug) {console.log("Homebridge-Luxtronik2: Going to connect");};
@@ -168,18 +168,14 @@ Luxtronik2.prototype = {
 	getServices: function() {
 		var informationService = new Service.AccessoryInformation();
 		    informationService
-      			.setCharacteristic(Characteristic.Manufacturer, "AI")
-				.setCharacteristic(Characteristic.Model, "Luxtronik2")
-				.setCharacteristic(Characteristic.SerialNumber, "n/a")
-		if (this.service == "outside_temp") {
-      			var temperatureService = new Service.TemperatureSensor("Outside Temperature");
-				temperatureService
-			        .getCharacteristic(Characteristic.CurrentTemperature)
-			        .on('get', this.getTemperature.bind(this));
+      	  .setCharacteristic(Characteristic.Manufacturer, "AI")
+				  .setCharacteristic(Characteristic.Model, "Luxtronik2")
+				  .setCharacteristic(Characteristic.SerialNumber, "n/a")
+    var temperatureService = new Service.TemperatureSensor("Outside Temperature");
+        temperatureService
+          .getCharacteristic(Characteristic.CurrentTemperature)
+          .on('get', this.getTemperature.bind(this));
 
-
-		return [informationService, temperatureService];
-		}
+    return [informationService, temperatureService];
 	}
 };
-

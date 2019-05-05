@@ -1,0 +1,29 @@
+{
+  "pluginAlias": "homebridge-luxtronik2.temperature",
+  "pluginType": "accessory",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "required": true,
+        "default": "Luxtronik2"
+      },
+      "IP": {
+        "title": "IP of the Luxtronik2 controller.",
+        "type": "string",
+        "required": true,
+        "default": "192.168.1.202",
+        "format": "hostname"
+      },
+      "Port": {
+        "title": "Port",
+        "type": "integer",
+        "default": 8888,
+        "maximum": 65535,
+        "required": true
+      }
+    }
+  }
+}
