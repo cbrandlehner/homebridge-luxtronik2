@@ -1,10 +1,10 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "2019.18.3",
+  "version": "2019.25.2",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "xo"
   },
   "repository": {
     "type": "git",
