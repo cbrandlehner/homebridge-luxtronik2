@@ -5,27 +5,64 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-    },
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cbrandlehner/homebridge-luxtronik2.git"
-    },
+  },
   "keywords": [
     "luxtronik2",
     "HomeBridge",
     "homebridge-plugin"
-    ],
+  ],
   "author": "Christian Brandlehner",
   "license": "MIT",
-  "config":{
-			"urls":[]
-	  },
+  "config": {
+    "urls": []
+  },
   "engines": {
     "homebridge": ">=0.4.46",
-    "node": ">=4.3.2"
+    "node": ">=8.15.1"
   },
   "dependencies": {
-	  "binary" : ">= 0.3.0",
-	  "socket.io-client" : ">= 2.2.0"
+    "socket.io-client": ">= 2.2.0"
+  },
+  "devDependencies": {
+    "xo": "^0.24.0"
+  },
+  "xo": {
+    "space": false,
+    "rules": {
+      "camelcase": "off",
+      "no-mixed-spaces-and-tabs": "warn",
+      "no-useless-escape": "off",
+      "indent": "off",
+      "quotes": "warn",
+      "capitalized-comments": "off",
+      "no-var": "off",
+      "prefer-destructuring": "off",
+      "prefer-arrow-callback": "off",
+      "max-depth": "off",
+      "object-shorthand": [
+        "off",
+        "always",
+        {
+          "ignoreConstructors": true
+        }
+      ],
+      "quote-props": "error",
+      "no-unused-vars": "warn",
+      "curly": [
+        "error",
+        "multi-or-nest",
+        "consistent"
+      ],
+      "no-use-before-define": [
+        "error",
+        {
+          "classes": false
+        }
+      ]
     }
+  }
 }

@@ -1,185 +1,178 @@
-'use strict';
-var Service, Characteristic;
-var stream = require('stream')
-  , util = require('util')
-  , os = require('os')
-  , exec = require('child_process').exec
-  , child;
+// 'use strict';
+var Service;
+var Characteristic;
 
 /* common code */
+const path = require('path');
+const packageFile = require('./package.json');
+
 var debug = false; // set true for more debugging info
 
-function translate(c)
-	{
-	var tools = require(__dirname+'/lib/tools.js');
-	var channellist = require(__dirname+'/lib/channellist.json');
-	if (debug) {console.log('Homebridge-Luxtronik2: translating data');};
+function translate(c) {
+  var tools = require(path.join(__dirname, '/lib/tools.js'));
+  var channellist = require(path.join(__dirname, '/lib/channellist.json'));
+	if (debug) console.log('Homebridge-Luxtronik2: translating data');
 	// translate dword to data type
 		var result = [];
-		for (var i=0;i< c.length; i++)
-		{
-			if (tools.isset(channellist[i]))
-			{
+		for (var i = 0; i < c.length; i++) {
+			if (tools.isset(channellist[i])) {
 				var value = c[i];
-				if (tools.isset(channellist[i].type))
-				{
-					switch (channellist[i].type)
-					{
+				if (tools.isset(channellist[i].type)) {
+					switch (channellist[i].type) {
 					case 'fix1':
 						value /= 10;
-						break;
+            break;
 					case 'ip':
 						value = tools.int2ip(value);
-						break;
-					case 'unixtime':
-						value = new Date(value * 1000).toISOString();
-						break;
-					case 'timestamp':
-						/* do nothing here, used for future feature. mysql table creation */
-						break;
+            break;
 					case 'ignore':
-						continue;
-						break;
+            continue;
 					case 'enum':
-						if (tools.isset(channellist[i].enum[c[i]]))
-						{
-							value = channellist[i].enum[c[i]];
-						}
-						break;
+						if (tools.isset(channellist[i].enum[c[i]])) value = channellist[i].enum[c[i]];
+            break;
+            default:
+            // nothing
+            break;
 					}
 				}
-				// push to array
-			result.push(value);
+
+			result.push(value); // push to array
 			}
 		}
+
 		return result;
 	}	// function translate(c)
 
-module.exports = function(homebridge){
-  Service = homebridge.hap.Service;
-  Characteristic = homebridge.hap.Characteristic;
-  homebridge.registerAccessory("homebridge-luxtronik2", "temperature", Luxtronik2);
-}
-
-/**
- * Called when this plugin starts up
-**/
 function Luxtronik2(log, config) {
 	this.log = log;
-	this.IP = config["IP"];
-	this.Port = config["Port"];
-	this.name = config["name"];
+  this.IP = config.IP;
+	this.Port = config.Port;
+	this.name = config.name;
   this.temperatureDisplayUnits = Characteristic.TemperatureDisplayUnits.CELSIUS;
+  this.firmwareRevision = packageFile.version;
+  this.log.info('Luxtronik2 IP is %s', this.IP);
+  this.log.info('Luxtronik2 Port is %s', this.Port);
+  this.log.info('Luxtronik2 name is %s', this.name);
+  this.log.debug('Debug enabled');
+  this.temperatureService = new Service.TemperatureSensor(this.name);
 }
 
 Luxtronik2.prototype = {
 
-  getTemperature: function(callback) {
-    console.log("Luxtronik2 Sensor Triggered");
-	if (debug) {console.log('Homebridge-Luxtronik2: getTemperature');};
+  getTemperature: function (callback) {
+  this.log.debug('getTemperature was called');
 	var net = require('net');
-	var buffer = require('buffer');
-	var binary = require('binary');
-	var temp = -99;
-	var tools = require(__dirname+'/lib/tools.js');
-	if (debug) { console.log('Homebridge-Luxtronik2: host and port from config: ' + this.IP + ' ' + this.Port);};
+  var temp = -99;
+  // var buffer = require('buffer');
+	// var binary = require('binary');
+	// var tools = require(path.join(__dirname, '/lib/tools.js'));
+	this.log.debug('host and port from config: ' + this.IP + ' ' + this.Port);
 
-	var luxsock = net.connect({host:this.IP, port: this.Port});
+	var luxsock = net.connect({host: this.IP, port: this.Port});
 		/* handle error */
-		if (debug) {console.log("Homebridge-Luxtronik2: Going to connect");};
-		luxsock.on("error", function (data)
-		{
-			if (debug) {console.log('Homebridge-Luxtronik2: ' + data.toString());};
-			console.error(data.toString());
-			//stop();
+		this.log.debug('Going to connect');
+		luxsock.on('error', function (data) {
+			console.error('Homebridge-Luxtronik2: error ' + data.toString());
+			// stop();
 		});
 		/* handle timeout */
-		luxsock.on("timeout", function ()
-		{
-			if (debug) {console.log('Homebridge-Luxtronik2: connection timeout');};
-			console.warn("client timeout event");
-			//stop();
+		luxsock.on('timeout', function () {
+			if (debug) console.warn('Homebridge-Luxtronik2: connection timeout');
+			// stop();
 		});
 		/* handle close */
-		luxsock.on("close", function ()
-		{
-			if (debug) {console.log("Homebridge-Luxtronik2: client close event");};
-			//stop();
+		luxsock.on('close', function () {
+			if (debug) console.info('Homebridge-Luxtronik2: client close event');
+			// stop();
 		});
 		/* handle end */
-		luxsock.on('end', function ()
-		{
-			if (debug) {console.log("Homebridge-Luxtronik2: client end event");};
-			//stop();
+		luxsock.on('end', function () {
+			if (debug) console.info('Homebridge-Luxtronik2: client end event');
+			// stop();
 		});
 		/* receive data */
-		luxsock.on('data', function(data)
-		{
-			if (debug) {console.log('Homebridge-Luxtronik2: reading data');};
-			var buf = new Buffer(data.length);
+		luxsock.on('data', function (data) {
+			if (debug) console.info('Homebridge-Luxtronik2: reading data');
+			// var buf = new Buffer(data.length);
+      var buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
 			/* luxtronik must confirm command */
 			var confirm = buf.readUInt32BE(0);
 			/* is 0 if data is unchanged since last request */
-			var change = buf.readUInt32BE(4);
+			// never used later in code ?? var change = buf.readUInt32BE(4);
 			/* number of values */
 			var count = buf.readUInt32BE(8);
-			if (confirm != 3004)
-			{
-				if (debug) {console.log('Homebridge-luxtronik2: command not confirmed');};
-				stop();
-			}
-			else if (data.length==count*4+12)
-			{
+			if (confirm !== 3004) {
+				if (debug) console.error('Homebridge-luxtronik2: command not confirmed');
+				// stop();
+			} else if (data.length === (count * 4) + 12) {
 				var pos = 12;
 				var calculated = new Int32Array(count);
-				for (var i=0;i<count;i++)
-				{
+				for (var i = 0; i < count; i++) {
 					calculated[i] = buf.readInt32BE(pos);
-					pos+=4;
+					pos += 4;
 				}
-				var items = translate(calculated);
+
+        var items = translate(calculated);
 				temp = items[5];
-				// deferred.resolve(luxsock);
-        // for debug purpose overwriting temp with hardcoded values
-        // temp = parseFloat('-22.2');
-        if (debug) {console.log('Homebridge-Luxtronik2: temperature data: ', temp);};
-				callback(null,temp);
+				if (debug) console.info('Homebridge-luxtronik2: Current temperature is: %s', temp);
+				callback(null, temp);
 			}
-			luxsock.end();
+
+      luxsock.end();
 		});
 		// connected => get values
-		luxsock.on('connect', function()
-		{
-			if (debug) {console.log('Homebridge-Luxtronik2: connected!');};
-			luxsock.setNoDelay(true);
+		luxsock.on('connect', function () {
+      luxsock.setNoDelay(true);
 			luxsock.setEncoding('binary');
-			var buf = new Buffer(4);
-			buf.writeUInt32BE(3004,0);
+			// var buf = new Buffer(4);
+      var buf = Buffer.alloc(4);
+			buf.writeUInt32BE(3004, 0);
 			luxsock.write(buf.toString('binary'), 'binary');
-			buf.writeUInt32BE(0,0);
+			buf.writeUInt32BE(0, 0);
 			luxsock.write(buf.toString('binary'), 'binary');
 		});
   },
 
-  identify: function(callback) {
-		this.log("Currently there is no way to help identify the Luxtronik2 device!");
+  identify: function (callback) {
+		this.log.info('Currently there is no way to help identify the Luxtronik2 device!');
 		callback();
 	},
 
-	getServices: function() {
-		var informationService = new Service.AccessoryInformation();
-		    informationService
-      	  .setCharacteristic(Characteristic.Manufacturer, "AI")
-				  .setCharacteristic(Characteristic.Model, "Luxtronik2")
-				  .setCharacteristic(Characteristic.SerialNumber, "n/a")
-    var temperatureService = new Service.TemperatureSensor("Outside Temperature");
+	getServices: function () {
+    var informationService = new Service.AccessoryInformation();
+    informationService
+    .setCharacteristic(Characteristic.Manufacturer, 'homebridge-luxtronik2')
+    .setCharacteristic(Characteristic.Model, 'Luxtronik2')
+    .setCharacteristic(Characteristic.FirmwareRevision, this.firmwareRevision)
+    .setCharacteristic(Characteristic.SerialNumber, this.firmwareRevision);
+    /*
+    var temperatureService = new Service.TemperatureSensor('Outside Temperature');
         temperatureService
           .getCharacteristic(Characteristic.CurrentTemperature)
-          .setProps({minValue: parseFloat("-50"),
-                     maxValue: parseFloat("100")})
+          .setProps({minValue: parseFloat('-50'),
+                     maxValue: parseFloat('100')})
           .on('get', this.getTemperature.bind(this));
+*/
 
-    return [informationService, temperatureService];
+  this.temperatureService
+    .getCharacteristic(Characteristic.CurrentTemperature)
+    .setProps({minValue: parseFloat('-50'),
+               maxValue: parseFloat('100')})
+    .on('get', this.getTemperature.bind(this));
+
+//
+
+    return [informationService, this.temperatureService];
 	}
 };
+
+module.exports = function (homebridge) {
+  Service = homebridge.hap.Service;
+  Characteristic = homebridge.hap.Characteristic;
+  homebridge.registerAccessory('homebridge-luxtronik2', 'temperature', Luxtronik2);
+};
+
+/**
+ * Called when this plugin starts up
+**/
