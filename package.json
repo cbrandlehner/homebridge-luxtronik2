@@ -1,31 +1,35 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "2019.25.2",
+  "version": "2019.25.3",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
-  "scripts": {
-    "test": "xo"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cbrandlehner/homebridge-luxtronik2.git"
-  },
   "keywords": [
     "luxtronik2",
     "HomeBridge",
     "homebridge-plugin"
   ],
+  "engines": {
+    "homebridge": ">=0.4.46",
+    "node": ">=8.15.1"
+  },
   "author": "Christian Brandlehner",
   "license": "MIT",
   "config": {
     "urls": []
   },
-  "engines": {
-    "homebridge": ">=0.4.46",
-    "node": ">=8.15.1"
-  },
   "dependencies": {
     "socket.io-client": ">= 2.2.0"
+  },
+  "scripts": {
+    "test": "xo"
+  },
+  "bugs": {
+    "url": "https://github.com/cbrandlehner/homebridge-luxtronik2/issues"
+  },
+  "homepage": "https://github.com/cbrandlehner/homebridge-luxtronik2#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cbrandlehner/homebridge-luxtronik2.git"
   },
   "devDependencies": {
     "xo": "^0.24.0"
