@@ -23,6 +23,32 @@
         "default": 8888,
         "maximum": 65535,
         "required": true
+      },
+      "Channel": {
+        "title": "Temperature to read from Luxtronik2",
+        "description": "Choose any sensor.",
+        "type": "integer",
+        "oneOf": [
+          { "title": "Temperatur_TVL", "enum": [0] },
+          { "title": "Temperatur_TRL", "enum": [1] },
+          { "title": "Sollwert_TRL_HZ", "enum": [2] },
+          { "title": "Temperatur_TRL_ext", "enum": [3] },
+          { "title": "Temperatur_THG", "enum": [4] },
+          { "title": "Temperatur_TA", "enum": [5] },
+          { "title": "Mitteltemperatur", "enum": [6] },
+          { "title": "Temperatur_TBW", "enum": [7] },
+          { "title": "Einst_BWS_akt", "enum": [8] },
+          { "title": "Temperatur_TWE", "enum": [9] },
+          { "title": "Temperatur_TWA", "enum": [10] },
+          { "title": "Temperatur_TFB1", "enum": [11] },
+          { "title": "Sollwert_TVL_MK", "enum": [12] },
+          { "title": "Temperatur_RFV", "enum": [13] },
+          { "title": "Temperatur_TFB2", "enum": [14] },
+          { "title": "Sollwert_TVL_MK2", "enum": [15] },
+          { "title": "Temperatur_TSK", "enum": [16] },
+          { "title": "Temperatur_TSS", "enum": [17] },
+          { "title": "Temperatur_TEE", "enum": [18] }
+        ]
       }
     }
   }

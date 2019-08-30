@@ -14,7 +14,8 @@
             "accessory" : "homebridge-luxtronik2.temperature",
             "name" : "Luxtronik2",
             "IP" : "192.168.1.10",
-            "Port" : "8888"
+            "Port" : "8888",
+            "Channel" : "5"
         }
    ]
 }
