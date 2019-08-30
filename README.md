@@ -21,26 +21,3 @@ If you are using [Homebridge Config UI X](https://github.com/oznu/homebridge-con
 
 ## USAGE
 A temperature sensor should appear on your iOS device as accessory in the "HOME" app.
-
-## Change-log
-2019.18.1:
-
-Added config.schema.json to allow configuration using [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x#readme)
-
-Simplified configuration by removing the service type
-
-Disabled Debug output
-
-Updated versions of dependencies in package.json
-
-2019.18.2:
-
-Updated README.md
-
-2019.18.3:
-
-Fixed issue with negative temperatures showing as 0°C
-
-2019.25.1:
-
-Rewrote some code to improve stability and security.
