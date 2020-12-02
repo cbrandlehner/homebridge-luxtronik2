@@ -1,4 +1,4 @@
-[![node](https://img.shields.io/node/v/gh-badges.svg)](https://img.shields.io/npm/dm/homebridge-luxtronik2.svg?style=flat)
+[![node](https://img.shields.io/node/v/gh-badges.svg)](https://github.com/cbrandlehner/homebridge-luxtronik2)
 [![npm](https://img.shields.io/npm/dt/homebridge-luxtronik2.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
 [![npm](https://img.shields.io/npm/l/homebridge-luxtronik2.svg)](https://github.com/cbrandlehner/homebridge-luxtronik2/blob/master/LICENSE)
 [![Build Status](https://travis-ci.com/cbrandlehner/homebridge-luxtronik2.svg?branch=master)](https://travis-ci.com/cbrandlehner/homebridge-luxtronik2)
