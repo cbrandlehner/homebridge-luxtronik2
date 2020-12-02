@@ -13,7 +13,7 @@ function translate(c) {
   const channellist = require(path.join(__dirname, '/lib/channellist.json'));
 	if (debug) console.log('Homebridge-Luxtronik2: translating data');
 	// translate dword to data type
-		var result = [];
+		const result = [];
 		for (let i = 0; i < c.length; i++) {
 			if (tools.isset(channellist[i])) {
 				let value = c[i];
@@ -92,7 +92,7 @@ Luxtronik2.prototype = {
   getTemperature: function (callback) {
     this.log.debug('getTemperature was called');
     const net = require('net');
-    let temp = -99;
+    let temperature = -99;
     const Channel = this.Channel;
     const that = this;
 
@@ -147,9 +147,9 @@ Luxtronik2.prototype = {
         const items = translate(calculated);
         that.log.debug('items %s', items);
         that.log.debug('Channel %s', Channel);
-				temp = items[Channel];
-				if (debug) console.info('Homebridge-luxtronik2: Current temperature is: %s', temp);
-				callback(null, temp);
+				temperature = items[Channel];
+				if (debug) console.info('Homebridge-luxtronik2: Current temperature is: %s', temperature);
+				callback(null, temperature);
 			}
 
       luxsock.end();
@@ -182,8 +182,8 @@ Luxtronik2.prototype = {
 
   this.temperatureService
     .getCharacteristic(Characteristic.CurrentTemperature)
-    .setProps({minValue: parseFloat('-50'),
-               maxValue: parseFloat('100')})
+    .setProps({minValue: Number.parseFloat('-50'),
+               maxValue: Number.parseFloat('100')})
     .on('get', this.getTemperature.bind(this));
 
 //
