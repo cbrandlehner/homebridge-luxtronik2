@@ -30,6 +30,7 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm ping  
+      - run: npm view  
       - run: npm config set always-auth=true
       - run: npm config list
       - run: cat /home/runner/work/_temp/.npmrc
