@@ -10,7 +10,7 @@
   ],
   "engines": {
     "homebridge": ">=0.4.46",
-    "node": ">=8.15.1"
+    "node": ">=10.0.0"
   },
   "author": "Christian Brandlehner",
   "license": "MIT",
