@@ -30,7 +30,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm config set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-      - run: npm config set scope "@cbrandlehner"
       - run: npm config set always-auth=true
       - run: npm config list
       - run: cat /home/runner/work/_temp/.npmrc
