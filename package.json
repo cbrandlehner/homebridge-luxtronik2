@@ -1,6 +1,6 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "2020.49.5",
+  "version": "2020.50.1",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "keywords": [
@@ -27,6 +27,16 @@
     "url": "https://github.com/cbrandlehner/homebridge-luxtronik2/issues"
   },
   "homepage": "https://github.com/cbrandlehner/homebridge-luxtronik2#readme",
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/cbrandlehner"
+    },
+    {
+      "type": "paypal",
+      "url": "https://paypal.me/CBrandlehner"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cbrandlehner/homebridge-luxtronik2.git"
