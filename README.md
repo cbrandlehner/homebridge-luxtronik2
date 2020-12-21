@@ -1,6 +1,6 @@
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
-[![node](https://img.shields.io/node/v/gh-badges.svg)](https://github.com/cbrandlehner/homebridge-luxtronik2)
+![node-current](https://img.shields.io/node/v/homebridge-luxtronik2)
 [![npm](https://img.shields.io/npm/dt/homebridge-luxtronik2.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
 [![npm](https://img.shields.io/npm/l/homebridge-luxtronik2.svg)](https://github.com/cbrandlehner/homebridge-luxtronik2/blob/master/LICENSE)
 [![Build Status](https://travis-ci.com/cbrandlehner/homebridge-luxtronik2.svg?branch=master)](https://travis-ci.com/cbrandlehner/homebridge-luxtronik2)
