@@ -9,7 +9,7 @@
 
 # homebridge-luxtronik2
 
-This plugin for Homebridge adds a temperature sensor. The temperature is the outside temperature measured by a Luxtronik2 based heat pump controller (Siemens, Novelan, Wolf, Alpha Innotec).
+This small plugin for Homebridge adds a temperature sensor. The temperature is the outside temperature measured by a Luxtronik2 based heat pump controller (Siemens, Novelan, Wolf, Alpha Innotec).
 
 ## Install guide
 First follow the instructions to install [Homebridge](https://github.com/nfarina/homebridge)
