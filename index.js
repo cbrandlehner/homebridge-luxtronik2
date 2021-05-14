@@ -2,9 +2,9 @@
 let Service;
 let Characteristic;
 
-/* common code */
+import packageFile from './package.json';
 const path = require('path');
-const packageFile = require('./package.json');
+// const packageFile = require('./package.json');
 
 const debug = false; // set true for more debugging info
 
