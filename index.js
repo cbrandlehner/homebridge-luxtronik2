@@ -2,7 +2,7 @@
 let Service;
 let Characteristic;
 
-import packageFile from './package.json';
+const packageFile = require('./package.json');
 const path = require('path');
 // const packageFile = require('./package.json');
 
