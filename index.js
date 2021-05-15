@@ -2,9 +2,8 @@
 let Service;
 let Characteristic;
 
-const packageFile = require('./package.json');
 const path = require('path');
-// const packageFile = require('./package.json');
+const packageFile = require('./package.json');
 
 const debug = false; // set true for more debugging info
 
@@ -92,8 +91,8 @@ Luxtronik2.prototype = {
   getTemperature: function (callback) {
     this.log.debug('getTemperature was called');
     const net = require('net');
-    let temperature = -99;
-    const Channel = this.Channel;
+    let temperature = -99; /* eslint unicorn/no-this-assignment: ["off"] */
+    const Channel = this.Channel; /* eslint prefer-destructuring: ["off"] */
     const that = this;
 
     this.log.debug('host and port from config: ' + this.IP + ' ' + this.Port);
