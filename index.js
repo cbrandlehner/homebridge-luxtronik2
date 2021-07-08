@@ -188,7 +188,7 @@ Luxtronik2.prototype = {
 //
 
     return [informationService, this.temperatureService];
-	}
+	},
 };
 
 module.exports = function (homebridge) {
