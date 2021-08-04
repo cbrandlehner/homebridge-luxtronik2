@@ -122,7 +122,7 @@ Luxtronik2.prototype = {
 		/* receive data */
 		luxsock.on('data', function (data) {
 			if (debug) that.log.debug('Homebridge-Luxtronik2: reading data');
-			// var buf = new Buffer(data.length);
+      /* eslint node/prefer-global/buffer: [error] */
       const buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
 			/* luxtronik must confirm command */
@@ -157,7 +157,7 @@ Luxtronik2.prototype = {
 		luxsock.on('connect', function () {
       luxsock.setNoDelay(true);
 			luxsock.setEncoding('binary');
-			// var buf = new Buffer(4);
+      /* eslint node/prefer-global/buffer: [error] */
       const buf = Buffer.alloc(4);
 			buf.writeUInt32BE(3004, 0);
 			luxsock.write(buf.toString('binary'), 'binary');
