@@ -20,7 +20,7 @@ This plugin can be installed using [Homebridge Config UI X](https://github.com/o
 npm install -g homebridge-luxtronik2
 ```
 
-Now you will have to setup your config.json for homebridge. An example is included in this repo.
+Now you will have to setup your config.json for homebridge. An example is included in this repo, however users are encouraged to avoid manual configuration and use the UI instead.
 If you are using [Homebridge Config UI X](https://github.com/oznu/homebridge-config-ui-x#readme) you can edit the configuration on the CONFIG tab.
 
 ## USAGE
