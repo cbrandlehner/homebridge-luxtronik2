@@ -5,12 +5,9 @@ let Characteristic;
 const path = require('path');
 const packageFile = require('./package.json');
 
-const debug = false; // set true for more debugging info
-
 function translate(c) {
   const tools = require(path.join(__dirname, '/lib/tools.js'));
   const channellist = require(path.join(__dirname, '/lib/channellist.json'));
-	if (debug) console.log('Homebridge-Luxtronik2: translating data');
 	// translate dword to data type
 		const result = [];
 		for (let i = 0; i < c.length; i++) {
@@ -77,12 +74,22 @@ function Luxtronik2(log, config) {
     this.log.debug('Config: Channel is %s', config.Channel);
   }
 
+  if (config.Debug === undefined) {
+    this.debug = false;
+  } else {
+    this.debug = config.Debug;
+    this.log.debug('Config: Debug is %s', config.Debug);
+  }
+
+  this.CurrentTemperature = 0; // Initial value for early response
+  this.counter = 1;
+
   this.temperatureDisplayUnits = Characteristic.TemperatureDisplayUnits.CELSIUS;
   this.firmwareRevision = packageFile.version;
   this.log.info('Luxtronik2 IP is %s', this.IP);
   this.log.info('Luxtronik2 Port is %s', this.Port);
   this.log.info('Luxtronik2 name is %s', this.name);
-  this.log.debug('Debug enabled');
+  this.log.debug('Homebridge debug enabled');
   this.temperatureService = new Service.TemperatureSensor(this.name);
 }
 
@@ -101,27 +108,27 @@ Luxtronik2.prototype = {
 
     this.log.debug('Going to connect');
 		luxsock.on('error', function (data) {
-			that.log.error('Homebridge-Luxtronik2: error ' + data.toString());
+			that.log.error('Error ' + data.toString());
 			// stop();
 		});
 		/* handle timeout */
 		luxsock.on('timeout', function () {
-			if (debug) that.log.info('Homebridge-Luxtronik2: connection timeout');
+			if (that.debug) that.log.info('Connection timeout. Check network settings.');
 			// stop();
 		});
 		/* handle close */
 		luxsock.on('close', function () {
-			if (debug) that.log.debug('Homebridge-Luxtronik2: client close event');
+			if (that.debug) that.log.debug('Connection to Luxtronik2 closed.');
 			// stop();
 		});
 		/* handle end */
 		luxsock.on('end', function () {
-			if (debug) that.log.debug('Homebridge-Luxtronik2: client end event');
+			if (that.debug) that.log.debug('Connection to Luxtronik2 ended.');
 			// stop();
 		});
 		/* receive data */
 		luxsock.on('data', function (data) {
-			if (debug) that.log.debug('Homebridge-Luxtronik2: reading data');
+			if (that.debug) that.log.debug('Connection to Luxtronik2 established, now reading data.');
       /* eslint node/prefer-global/buffer: [error] */
       const buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
@@ -132,7 +139,7 @@ Luxtronik2.prototype = {
 			/* number of values */
 			const count = buf.readUInt32BE(8);
 			if (confirm !== 3004) {
-				if (debug) that.log.error('Homebridge-luxtronik2: command not confirmed');
+				if (that.debug) that.log.error('Luxtronik2 did not confirm our request to send data. STOP.');
 				// stop();
 			} else if (data.length === (count * 4) + 12) {
 				let pos = 12;
@@ -142,12 +149,12 @@ Luxtronik2.prototype = {
 					pos += 4;
 				}
 
-        that.log.debug('calculated %s', calculated);
+        that.log.debug('Data received: %s', calculated);
         const items = translate(calculated);
-        that.log.debug('items %s', items);
-        that.log.debug('Channel %s', Channel);
+        that.log.debug('Itemized datalist: %s', items);
+        that.log.debug('Plugin is reading Channel %s', Channel);
 				temperature = items[Channel];
-				if (debug) console.info('Homebridge-luxtronik2: Current temperature is: %s', temperature);
+				if (that.debug) that.log.info('Current temperature is: %s', temperature);
 				callback(null, temperature);
 			}
 
@@ -166,6 +173,17 @@ Luxtronik2.prototype = {
 		});
   },
 
+  getCurrentTemperature(callback) { // Wrapper for service call to early return
+    const counter = ++this.counter;
+    this.log.debug('getCurrentTemperature: early callback with cached CurrentTemperature: %s (%d).', this.CurrentTemperature, counter);
+    callback(null, this.CurrentTemperature);
+    this.getTemperature((error, HomeKitState) => {
+      this.CurrentTemperature = HomeKitState;
+      this.temperatureService.getCharacteristic(Characteristic.CurrentTemperature).updateValue(this.CurrentTemperature);
+      this.log.debug('getCurrentTemperature: update CurrentTemperature: %s (%d).', this.CurrentTemperature, counter);
+    });
+  },
+
   identify: function (callback) {
 		this.log.info('Currently there is no way to help identify the Luxtronik2 device!');
 		callback();
@@ -179,11 +197,12 @@ Luxtronik2.prototype = {
     .setCharacteristic(Characteristic.FirmwareRevision, this.firmwareRevision)
     .setCharacteristic(Characteristic.SerialNumber, this.firmwareRevision);
 
-  this.temperatureService
+    this.temperatureService
     .getCharacteristic(Characteristic.CurrentTemperature)
     .setProps({minValue: Number.parseFloat('-50'),
                maxValue: Number.parseFloat('100')})
-    .on('get', this.getTemperature.bind(this));
+    // .on('get', this.getTemperature.bind(this));
+    .on('get', this.getCurrentTemperature.bind(this));
 
 //
 
