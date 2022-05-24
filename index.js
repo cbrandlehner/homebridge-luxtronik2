@@ -88,7 +88,7 @@ function Luxtronik2(log, config) {
   this.firmwareRevision = packageFile.version;
   this.log.info('Luxtronik2 IP is %s', this.IP);
   this.log.info('Luxtronik2 Port is %s', this.Port);
-  this.log.info('Luxtronik2 name is %s', this.name);
+  this.log.info('Luxtronik2 Name is %s', this.name);
   this.log.debug('Homebridge debug enabled');
   this.temperatureService = new Service.TemperatureSensor(this.name);
 }
