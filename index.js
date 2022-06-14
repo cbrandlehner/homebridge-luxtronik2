@@ -129,7 +129,7 @@ Luxtronik2.prototype = {
 		/* receive data */
 		luxsock.on('data', function (data) {
 			if (that.debug) that.log.debug('Connection to Luxtronik2 established, now reading data.');
-      /* eslint node/prefer-global/buffer: [error] */
+      const {Buffer} = require('buffer');
       const buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
 			/* luxtronik must confirm command */
@@ -164,7 +164,7 @@ Luxtronik2.prototype = {
 		luxsock.on('connect', function () {
       luxsock.setNoDelay(true);
 			luxsock.setEncoding('binary');
-      /* eslint node/prefer-global/buffer: [error] */
+      const {Buffer} = require('buffer');
       const buf = Buffer.alloc(4);
 			buf.writeUInt32BE(3004, 0);
 			luxsock.write(buf.toString('binary'), 'binary');
