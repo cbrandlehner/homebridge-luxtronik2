@@ -7,7 +7,6 @@
 [![Build Status](https://travis-ci.com/cbrandlehner/homebridge-luxtronik2.svg?branch=master)](https://travis-ci.com/cbrandlehner/homebridge-luxtronik2)
 ![Node CI](https://github.com/cbrandlehner/homebridge-luxtronik2/workflows/Node%20CI/badge.svg)
 ![CodeQL](https://github.com/cbrandlehner/homebridge-luxtronik2/workflows/CodeQL/badge.svg)
-[![HCL AppScan CodeSweep](https://github.com/cbrandlehner/homebridge-luxtronik2/actions/workflows/main.yml/badge.svg)](https://github.com/cbrandlehner/homebridge-luxtronik2/actions/workflows/main.yml)
 
 
 # homebridge-luxtronik2
