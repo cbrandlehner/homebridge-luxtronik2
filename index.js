@@ -2,7 +2,7 @@
 let Service;
 let Characteristic;
 
-const path = require('path');
+const path = require('node:path');
 const packageFile = require('./package.json');
 
 function translate(c) {
@@ -15,20 +15,24 @@ function translate(c) {
 				let value = c[i];
 				if (tools.isset(channellist[i].type)) {
 					switch (channellist[i].type) {
-					case 'fix1':
+					case 'fix1': {
 						value /= 10;
-            break;
-					case 'ip':
+            break;}
+
+            case 'ip': {
 						value = tools.int2ip(value);
-            break;
-					case 'ignore':
-            continue;
-					case 'enum':
+            break;}
+
+            case 'ignore': {
+            continue;}
+
+            case 'enum': {
 						if (tools.isset(channellist[i].enum[c[i]])) value = channellist[i].enum[c[i]];
-            break;
-            default:
+            break;}
+
+            default: {
             // nothing
-            break;
+            break;}
 					}
 				}
 
@@ -97,7 +101,7 @@ Luxtronik2.prototype = {
 
   getTemperature: function (callback) {
     this.log.debug('getTemperature was called');
-    const net = require('net');
+    const net = require('node:net');
     let temperature = -99; /* eslint unicorn/no-this-assignment: ["off"] */
     const Channel = this.Channel; /* eslint prefer-destructuring: ["off"] */
     const that = this;
@@ -129,7 +133,7 @@ Luxtronik2.prototype = {
 		/* receive data */
 		luxsock.on('data', function (data) {
 			if (that.debug) that.log.debug('Connection to Luxtronik2 established, now reading data.');
-      const {Buffer} = require('buffer');
+      const {Buffer} = require('node:buffer');
       const buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
 			/* luxtronik must confirm command */
@@ -164,7 +168,7 @@ Luxtronik2.prototype = {
 		luxsock.on('connect', function () {
       luxsock.setNoDelay(true);
 			luxsock.setEncoding('binary');
-      const {Buffer} = require('buffer');
+      const {Buffer} = require('node:buffer');
       const buf = Buffer.alloc(4);
 			buf.writeUInt32BE(3004, 0);
 			luxsock.write(buf.toString('binary'), 'binary');
