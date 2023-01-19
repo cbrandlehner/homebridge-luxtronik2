@@ -199,8 +199,7 @@ Luxtronik2.prototype = {
     .setCharacteristic(Characteristic.Manufacturer, 'homebridge-luxtronik2')
     .setCharacteristic(Characteristic.Model, 'Luxtronik2')
     .setCharacteristic(Characteristic.FirmwareRevision, this.firmwareRevision)
-    .setCharacteristic(Characteristic.SerialNumber, this.firmwareRevision);
-
+    .setCharacteristic(Characteristic.SerialNumber, this.name);
     this.temperatureService
     .getCharacteristic(Characteristic.CurrentTemperature)
     .setProps({minValue: Number.parseFloat('-50'),
