@@ -1,8 +1,8 @@
   name: Delete Package Versions
   uses: actions/delete-package-versions@v4.0.0
   on:
-  release:
-    types: [created]
+    release:
+      types: [created]
   
   # with:
   # Can be a single package version id, or a comma separated list of package version ids.
