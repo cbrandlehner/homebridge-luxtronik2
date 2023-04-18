@@ -46,6 +46,13 @@ function translate(c) {
 function Luxtronik2(log, config) {
 	this.log = log;
 
+  const process = require('node:process');
+  const NODE_MAJOR_VERSION = process.versions.node.split('.')[0];
+  if (NODE_MAJOR_VERSION <= 14) {
+    this.log.warn('WARNING: NodeJS version 14 is end of life 2023-04-30.');
+    this.log.warn('Visit nodejs.org for more details.');
+  }
+
   if (config.IP === undefined) {
     this.log.error('ERROR: your configuration is missing the parameter "IP"');
     this.IP = '127.0.0.1';
@@ -132,7 +139,7 @@ Luxtronik2.prototype = {
 		});
 		/* receive data */
 		luxsock.on('data', function (data) {
-			if (that.debug) that.log.debug('Connection to Luxtronik2 established, now reading data.');
+			if (that.debug) that.log.debug('Connection to Luxtronik2 established. Requesting data by sending command.');
       const {Buffer} = require('node:buffer');
       const buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
@@ -141,26 +148,31 @@ Luxtronik2.prototype = {
 			/* is 0 if data is unchanged since last request */
 			// never used later in code ?? var change = buf.readUInt32BE(4);
 			/* number of values */
-			const count = buf.readUInt32BE(8);
-			if (confirm !== 3004) {
-				if (that.debug) that.log.error('Luxtronik2 did not confirm our request to send data. STOP.');
-				// stop();
-			} else if (data.length === (count * 4) + 12) {
-				let pos = 12;
-				const calculated = new Int32Array(count);
-				for (let i = 0; i < count; i++) {
-					calculated[i] = buf.readInt32BE(pos);
-					pos += 4;
-				}
+			// const count = buf.readUInt32BE(8); // moved that code down into the else clause section.
+			if (confirm === 3004) {
+        that.log.debug('Luxtronik2 confirmed command.');
+        const count = buf.readUInt32BE(8);
+        if (data.length === (count * 4) + 12) {
+				  let pos = 12;
+				  const calculated = new Int32Array(count);
+				  for (let i = 0; i < count; i++) {
+				  	calculated[i] = buf.readInt32BE(pos);
+				  	pos += 4;
+				  }
 
-        that.log.debug('Data received: %s', calculated);
-        const items = translate(calculated);
-        that.log.debug('Itemized datalist: %s', items);
-        that.log.debug('Plugin is reading Channel %s', Channel);
-				temperature = items[Channel];
-				if (that.debug) that.log.info('Current temperature is: %s', temperature);
-				callback(null, temperature);
-			}
+          that.log.debug('Data received: %s', calculated);
+          const items = translate(calculated);
+          that.log.debug('Itemized datalist: %s', items);
+          that.log.debug('Plugin is reading Channel %s', Channel);
+				  temperature = items[Channel];
+				  if (that.debug) that.log.info('Current temperature is: %s', temperature);
+				  callback(null, temperature);
+        }
+			} else {
+        that.log.debug('Luxtronik2 did not confirm command to send data.');
+        if (that.debug) that.log.error('ERROR: Luxtronik2 did not confirm our request to send data. STOP.');
+        // stop();
+      }
 
       luxsock.end();
 		});
