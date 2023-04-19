@@ -49,12 +49,6 @@
           { "title": "Temperatur_TSS", "enum": [17] },
           { "title": "Temperatur_TEE", "enum": [18] }
         ]
-      },
-      "Debug": {
-        "title": "Plugin debug mode",
-        "description": "Developer mode: Debug generates more log output.",
-        "type": "boolean",
-        "default": false
       }
     }
   }

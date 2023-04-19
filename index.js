@@ -85,13 +85,6 @@ function Luxtronik2(log, config) {
     this.log.debug('Config: Channel is %s', config.Channel);
   }
 
-  if (config.Debug === undefined) {
-    this.debug = false;
-  } else {
-    this.debug = config.Debug;
-    this.log.debug('Config: Debug is %s', config.Debug);
-  }
-
   this.CurrentTemperature = 0; // Initial value for early response
   this.counter = 1;
 
@@ -119,27 +112,27 @@ Luxtronik2.prototype = {
 
     this.log.debug('Going to connect');
 		luxsock.on('error', function (data) {
-			that.log.error('Error ' + data.toString());
+			that.log.error(data.toString());
 			// stop();
 		});
 		/* handle timeout */
 		luxsock.on('timeout', function () {
-			if (that.debug) that.log.info('Connection timeout. Check network settings.');
+			that.log.warn('Connection timeout. Check network settings.');
 			// stop();
 		});
 		/* handle close */
 		luxsock.on('close', function () {
-			if (that.debug) that.log.debug('Connection to Luxtronik2 closed.');
+		  that.log.debug('Connection to Luxtronik2 closed.');
 			// stop();
 		});
 		/* handle end */
 		luxsock.on('end', function () {
-			if (that.debug) that.log.debug('Connection to Luxtronik2 ended.');
+			that.log.debug('Connection to Luxtronik2 ended.');
 			// stop();
 		});
 		/* receive data */
 		luxsock.on('data', function (data) {
-			if (that.debug) that.log.debug('Connection to Luxtronik2 established. Requesting data by sending command.');
+			that.log.debug('Connection to Luxtronik2 established. Requesting data by sending command.');
       const {Buffer} = require('node:buffer');
       const buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
@@ -165,12 +158,11 @@ Luxtronik2.prototype = {
           that.log.debug('Itemized datalist: %s', items);
           that.log.debug('Plugin is reading Channel %s', Channel);
 				  temperature = items[Channel];
-				  if (that.debug) that.log.info('Current temperature is: %s', temperature);
+				  that.log.debug('Current temperature is: %s', temperature);
 				  callback(null, temperature);
         }
 			} else {
-        that.log.debug('Luxtronik2 did not confirm command to send data.');
-        if (that.debug) that.log.error('ERROR: Luxtronik2 did not confirm our request to send data. STOP.');
+        that.log.warn('Error: Luxtronik2 did not confirm command to send data.');
         // stop();
       }
 
