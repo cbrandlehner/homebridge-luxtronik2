@@ -48,6 +48,7 @@ function Luxtronik2(log, config) {
 
   const process = require('node:process');
   const NODE_MAJOR_VERSION = process.versions.node.split('.')[0];
+  this.log.debug('NodeJS version is %s', process.versions.node);
   if (NODE_MAJOR_VERSION <= 14) {
     this.log.warn('WARNING: NodeJS version 14 is end of life 2023-04-30.');
     this.log.warn('Visit nodejs.org for more details.');
@@ -137,14 +138,22 @@ Luxtronik2.prototype = {
       const buf = Buffer.alloc(data.length);
 			buf.write(data, 'binary');
 			/* luxtronik must confirm command */
+      that.log.debug('Buffer length is %s', buf.length);
 			const confirm = buf.readUInt32BE(0);
+      that.log.debug('Confirm message is %s', confirm);
 			/* is 0 if data is unchanged since last request */
 			// never used later in code ?? var change = buf.readUInt32BE(4);
 			/* number of values */
 			// const count = buf.readUInt32BE(8); // moved that code down into the else clause section.
-			if (confirm === 3004) {
-        that.log.debug('Luxtronik2 confirmed command.');
-        const count = buf.readUInt32BE(8);
+      const offset = 8;
+      if (offset + 4 > buf.length) {
+        // buffer does not have enough bytes to read uint32 at offset
+        that.log.warn('Buffer does not have enough bytes. Exiting function without being able to update data.');
+      }
+
+			if ((confirm === 3004) && (offset + 4 > buf.length)) {
+        that.log.debug('Luxtronik2 confirmed command and the buffer byte count is good.');
+        const count = buf.readUInt32BE(offset);
         if (data.length === (count * 4) + 12) {
 				  let pos = 12;
 				  const calculated = new Int32Array(count);
