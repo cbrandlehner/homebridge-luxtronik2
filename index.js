@@ -151,7 +151,7 @@ Luxtronik2.prototype = {
         that.log.warn('Buffer does not have enough bytes. Exiting function without being able to update data.');
       }
 
-			if ((confirm === 3004) && (offset + 4 > buf.length)) {
+			if ((confirm === 3004) && (offset + 4 <= buf.length)) {
         that.log.debug('Luxtronik2 confirmed command and the buffer byte count is good.');
         const count = buf.readUInt32BE(offset);
         if (data.length === (count * 4) + 12) {
