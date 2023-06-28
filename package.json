@@ -1,6 +1,6 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "keywords": [
@@ -10,7 +10,7 @@
   ],
   "engines": {
     "node": ">=16.18.1",
-    "homebridge": ">=1.4.1"
+    "homebridge": ">=1.6.1"
   },
   "author": "Christian Brandlehner",
   "license": "MIT",
