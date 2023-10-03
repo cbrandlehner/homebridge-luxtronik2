@@ -18,7 +18,7 @@
     "urls": []
   },
   "dependencies": {
-    "socket.io-client": ">= 4.6.1"
+    "socket.io-client": ">= 4.7.2"
   },
   "scripts": {
     "pretest": "eslint --ignore-path .eslintrc.json package.json package-lock.json config.schema.json sample-config.json --ignore-pattern '.gitignore'",
