@@ -49,8 +49,8 @@ function Luxtronik2(log, config) {
   const process = require('node:process');
   const NODE_MAJOR_VERSION = process.versions.node.split('.')[0];
   this.log.debug('NodeJS version is %s', process.versions.node);
-  if (NODE_MAJOR_VERSION <= 14) {
-    this.log.warn('WARNING: NodeJS version 14 is end of life 2023-04-30.');
+  if (NODE_MAJOR_VERSION <= 16) {
+    this.log.warn('WARNING: NodeJS version 16 is end of life 2023-09-11.');
     this.log.warn('Visit nodejs.org for more details.');
   }
 
