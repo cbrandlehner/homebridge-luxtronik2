@@ -123,7 +123,7 @@ Luxtronik2.prototype = {
 		});
 		/* handle close */
 		luxsock.on('close', function () {
-		  that.log.debug('Connection to Luxtronik2 closed.');
+      that.log.debug('Connection to Luxtronik2 closed.');
 			// stop();
 		});
 		/* handle end */
@@ -155,20 +155,20 @@ Luxtronik2.prototype = {
         that.log.debug('Luxtronik2 confirmed command and the buffer byte count is good.');
         const count = buf.readUInt32BE(offset);
         if (data.length === (count * 4) + 12) {
-				  let pos = 12;
-				  const calculated = new Int32Array(count);
-				  for (let i = 0; i < count; i++) {
-				  	calculated[i] = buf.readInt32BE(pos);
-				  	pos += 4;
-				  }
+          let pos = 12;
+           const calculated = new Int32Array(count);
+            for (let i = 0; i < count; i++) {
+            calculated[i] = buf.readInt32BE(pos);
+            pos += 4;
+          }
 
           that.log.debug('Data received: %s', calculated);
           const items = translate(calculated);
           that.log.debug('Itemized datalist: %s', items);
           that.log.debug('Plugin is reading Channel %s', Channel);
-				  temperature = items[Channel];
-				  that.log.debug('Current temperature is: %s', temperature);
-				  callback(null, temperature);
+          temperature = items[Channel];
+          that.log.debug('Current temperature is: %s', temperature);
+          callback(null, temperature);
         }
 			} else {
         that.log.warn('Error: Luxtronik2 did not confirm command to send data.');
