@@ -215,8 +215,10 @@ Luxtronik2.prototype = {
     .setCharacteristic(Characteristic.SerialNumber, this.name);
     this.temperatureService
     .getCharacteristic(Characteristic.CurrentTemperature)
-    .setProps({minValue: Number.parseFloat('-50'),
-               maxValue: Number.parseFloat('100')})
+    .setProps({
+      minValue: Number.parseFloat('-50'),
+      maxValue: Number.parseFloat('100'),
+              })
     // .on('get', this.getTemperature.bind(this));
     .on('get', this.getCurrentTemperature.bind(this));
 
