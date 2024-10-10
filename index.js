@@ -228,7 +228,7 @@ Luxtronik2.prototype = {
 	},
 };
 
-module.exports = function (homebridge) {
+module.exports = function (homebridge) { /* unicorn/no-anonymous-default-export: ["off"] */
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
   homebridge.registerAccessory('homebridge-luxtronik2', 'temperature', Luxtronik2);
