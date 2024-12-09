@@ -42,7 +42,7 @@
     "eslint": "^9.5.0",
     "eslint-config-xo": "^0.46.0",
     "jsonlint": "^1.6.3",
-    "xo": "^0.59.3"
+    "xo": "^0.60.0"
   },
   "scripts": {
     "lint:json": "jsonlint -q package.json package-lock.json config.schema.json sample-config.json",
