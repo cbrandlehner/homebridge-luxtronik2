@@ -18,7 +18,7 @@
         "format": "hostname"
       },
       "Port": {
-        "title": "Port",,
+        "title": "Port",
         "type": "integer",
         "default": 8888,
         "maximum": 65535,

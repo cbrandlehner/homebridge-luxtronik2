@@ -142,9 +142,6 @@ Luxtronik2.prototype = {
 			const confirm = buf.readUInt32BE(0);
       that.log.debug('Confirm message is %s', confirm);
 			/* is 0 if data is unchanged since last request */
-			// never used later in code ?? var change = buf.readUInt32BE(4);
-			/* number of values */
-			// const count = buf.readUInt32BE(8); // moved that code down into the else clause section.
       const offset = 8;
       if (offset + 4 > buf.length) {
         // buffer does not have enough bytes to read uint32 at offset
@@ -219,7 +216,6 @@ Luxtronik2.prototype = {
       minValue: Number.parseFloat('-50'),
       maxValue: Number.parseFloat('100'),
               })
-    // .on('get', this.getTemperature.bind(this));
     .on('get', this.getCurrentTemperature.bind(this));
 
 //
