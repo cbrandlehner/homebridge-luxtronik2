@@ -1,8 +1,9 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
+  "type": "module",
   "keywords": [
     "luxtronik2",
     "HomeBridge",
@@ -39,19 +40,20 @@
     "url": "git+https://github.com/cbrandlehner/homebridge-luxtronik2.git"
   },
   "devDependencies": {
-    "eslint": "^9.5.0",
-    "eslint-config-xo": "^0.46.0",
-    "jsonlint": "^1.6.3",
-    "xo": "^0.60.0"
+    "xo": "^0.60.0",
+    "eslint-plugin-json": "^3.1.0"
   },
   "scripts": {
-    "lint:json": "jsonlint -q package.json package-lock.json config.schema.json sample-config.json",
+    "lint:json": "xo --ext .json",
     "pretest": "npm run lint:json",
     "test": "xo"
   },
   "xo": {
-    "space": false,
+    "extensions": ["js", "json"],
+    "plugins": ["json"],
     "rules": {
+      "json/*": "error",
+      "unicorn/expiring-todo-comments": "off",
       "unicorn/no-for-loop": "off",
       "unicorn/no-anonymous-default-export": "off",
       "camelcase": "off",
@@ -83,8 +85,7 @@
           "classes": false
         }
       ],
-      "unicorn/prefer-module": "off",
-      "unicorn/expiring-todo-comments": "off"
+      "unicorn/prefer-module": "off"
     }
   }
 }
