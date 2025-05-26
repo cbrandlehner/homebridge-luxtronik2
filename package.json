@@ -39,7 +39,7 @@
     "url": "git+https://github.com/cbrandlehner/homebridge-luxtronik2.git"
   },
   "devDependencies": {
-    "xo": "^0.60.0",
+    "xo": "^1.0.0",
     "eslint-plugin-json": "^4.0.1"
   },
   "scripts": {
