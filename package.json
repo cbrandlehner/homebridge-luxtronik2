@@ -1,6 +1,6 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "keywords": [
@@ -9,7 +9,7 @@
     "homebridge-plugin"
   ],
   "engines": {
-    "node": "^18.20.8 || ^20.19.0 || ^22.14.0 || ^23.11.0",
+    "node": "^20.19.0 || ^22.14.0 || ^24.0",
     "homebridge": "^1.9.0 || ^2.0.0-beta.0"
   },
   "author": "Christian Brandlehner",
@@ -39,31 +39,34 @@
     "url": "git+https://github.com/cbrandlehner/homebridge-luxtronik2.git"
   },
   "devDependencies": {
-    "xo": "^0.60.0",
-    "eslint-plugin-json": "^4.0.1"
+    "xo": "^1.0.5",
+    "jsonlint": "^1.6.3"
   },
   "scripts": {
-    "lint:json": "xo --ext .json",
-    "pretest": "npm run lint:json",
-    "test": "xo"
+    "test": "xo",
+    "lint:json": "jsonlint package.json"
   },
   "xo": {
-    "extensions": ["js", "json"],
-    "plugins": ["json"],
     "rules": {
-      "json/*": "error",
-      "unicorn/expiring-todo-comments": "off",
-      "unicorn/no-for-loop": "off",
-      "unicorn/no-anonymous-default-export": "off",
       "camelcase": "off",
-      "no-mixed-spaces-and-tabs": "warn",
-      "no-useless-escape": "warn",
-      "indent": "off",
-      "quotes": "warn",
       "capitalized-comments": "off",
-      "no-var": "warn",
-      "prefer-arrow-callback": "off",
+      "curly": [
+        "error",
+        "multi-or-nest",
+        "consistent"
+      ],
+      "indent": "off",
       "max-depth": "off",
+      "no-mixed-spaces-and-tabs": "warn",
+      "no-unused-vars": "error",
+      "no-use-before-define": [
+        "error",
+        {
+          "classes": false
+        }
+      ],
+      "no-useless-escape": "warn",
+      "no-var": "warn",
       "object-shorthand": [
         "off",
         "always",
@@ -71,19 +74,13 @@
           "ignoreConstructors": true
         }
       ],
-      "quote-props": "error",
-      "no-unused-vars": "error",
-      "curly": [
-        "error",
-        "multi-or-nest",
-        "consistent"
-      ],
-      "no-use-before-define": [
-        "error",
-        {
-          "classes": false
-        }
-      ],
+      "prefer-arrow-callback": "off",
+      "quote-props": "off",
+      "quotes": "off",
+      "@stylistic/indent": "off",
+      "unicorn/expiring-todo-comments": "off",
+      "unicorn/no-anonymous-default-export": "off",
+      "unicorn/no-for-loop": "off",
       "unicorn/prefer-module": "off"
     }
   }
