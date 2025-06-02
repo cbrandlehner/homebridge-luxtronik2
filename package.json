@@ -1,6 +1,6 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "1.5.0",
+  "version": "1.5.2",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "keywords": [
@@ -39,12 +39,10 @@
     "url": "git+https://github.com/cbrandlehner/homebridge-luxtronik2.git"
   },
   "devDependencies": {
-    "xo": "^1.0.5",
-    "jsonlint": "^1.6.3"
+    "xo": "^1.0.5"
   },
   "scripts": {
-    "test": "xo",
-    "lint:json": "jsonlint package.json"
+    "test": "xo"
   },
   "xo": {
     "rules": {
