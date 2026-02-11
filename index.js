@@ -47,6 +47,20 @@ function translate(c) {
   return result;
 }
 
+/**
+ * Initialize a Luxtronik2 Homebridge accessory and prepare its temperature service.
+ *
+ * Validates configuration keys and applies defaults for missing fields, initializes internal state
+ * (CurrentTemperature, counter, temperatureDisplayUnits, firmwareRevision), logs device info,
+ * and creates a TemperatureSensor service instance.
+ *
+ * @param {object} log - Logger object with methods like info, debug, and error.
+ * @param {object} config - Accessory configuration.
+ * @param {string} [config.IP='127.0.0.1'] - Device IP address.
+ * @param {number} [config.Port=8888] - Device TCP port.
+ * @param {string} [config.name='Unnamed Luxtronik2'] - Accessory display name.
+ * @param {number} [config.Channel=5] - Channel index to read temperature from.
+ */
 function Luxtronik2(log, config) {
   this.log = log;
 
