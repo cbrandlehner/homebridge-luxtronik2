@@ -39,7 +39,7 @@
     "url": "git+https://github.com/cbrandlehner/homebridge-luxtronik2.git"
   },
   "devDependencies": {
-    "xo": "^2.0.2"
+    "xo": "^3.0.0"
   },
   "scripts": {
     "test": "xo"
