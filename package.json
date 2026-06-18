@@ -1,6 +1,6 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "keywords": [
@@ -16,9 +16,6 @@
   "license": "MIT",
   "config": {
     "urls": []
-  },
-  "dependencies": {
-    "socket.io-client": ">= 4.8.1"
   },
   "bugs": {
     "url": "https://github.com/cbrandlehner/homebridge-luxtronik2/issues"

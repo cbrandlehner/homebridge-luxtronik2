@@ -1,51 +1,10 @@
-// 'use strict';
+'use strict';
+
 let Service;
 let Characteristic;
 
-const path = require('node:path');
 const packageFile = require('./package.json');
-
-function translate(c) {
-  const tools = require(path.join(__dirname, '/lib/tools.js'));
-  const channellist = require(path.join(__dirname, '/lib/channellist.json'));
-  const result = [];
-
-  for (let i = 0; i < c.length; i++) {
-    if (tools.isset(channellist[i])) {
-      let value = c[i];
-      if (tools.isset(channellist[i].type)) {
-        switch (channellist[i].type) {
-          case 'fix1': {
-            value /= 10;
-            break;
-          }
-
-          case 'ip': {
-            value = tools.int2ip(value);
-            break;
-          }
-
-          case 'ignore': {
-            continue;
-          }
-
-          case 'enum': {
-            if (tools.isset(channellist[i].enum[c[i]])) value = channellist[i].enum[c[i]];
-            break;
-          }
-
-          default: {
-            break;
-          }
-        }
-      }
-
-      result.push(value);
-    }
-  }
-
-  return result;
-}
+const {Luxtronik2Client} = require('./lib/luxtronik2-client.js');
 
 /**
  * Initialize a Luxtronik2 Homebridge accessory and prepare its temperature service.
@@ -98,7 +57,10 @@ function Luxtronik2(log, config) {
   this.log.debug('Config: Channel is %s', this.Channel);
 
   this.CurrentTemperature = 0;
+  this.statusActive = false;
+  this.hasValidReading = false;
   this.counter = 1;
+  this.client = Luxtronik2Client.getClient(this.IP, this.Port, this.log);
 
   this.temperatureDisplayUnits = Characteristic.TemperatureDisplayUnits.CELSIUS;
   this.firmwareRevision = packageFile.version;
@@ -111,98 +73,47 @@ function Luxtronik2(log, config) {
 
 Luxtronik2.prototype = {
 
-  getTemperature: function (callback) {
+  getTemperature(callback) {
     this.log.debug('getTemperature was called');
-    const net = require('node:net');
-    let temperature = -99; /* eslint unicorn/no-this-assignment: ["off"] */
-    const Channel = this.Channel; /* eslint prefer-destructuring: ["off"] */
-    const that = this;
-
-    this.log.debug('host and port from config: ' + this.IP + ' ' + this.Port);
-
-    const luxsock = net.connect({host: this.IP, port: this.Port});
-
-    this.log.debug('Going to connect');
-    luxsock.on('error', function (data) {
-      that.log.error(data.toString());
-    });
-    luxsock.on('timeout', function () {
-      that.log.warn('Connection timeout. Check network settings.');
-    });
-    luxsock.on('close', function () {
-      that.log.debug('Connection to Luxtronik2 closed.');
-    });
-    luxsock.on('end', function () {
-      that.log.debug('Connection to Luxtronik2 ended.');
-    });
-    luxsock.on('data', function (data) {
-      that.log.debug('Connection to Luxtronik2 established. Requesting data by sending command.');
-      const {Buffer} = require('node:buffer');
-      const buf = Buffer.alloc(data.length);
-      buf.write(data, 'binary');
-      that.log.debug('Buffer length is %s', buf.length);
-      const confirm = buf.readUInt32BE(0);
-      that.log.debug('Confirm message is %s', confirm);
-      const offset = 8;
-      if (offset + 4 > buf.length) {
-        that.log.warn('Buffer does not have enough bytes. Exiting function without being able to update data.');
-        return;
-      }
-
-      if (confirm === 3004 && offset + 4 <= buf.length) {
-        that.log.debug('Luxtronik2 confirmed command and the buffer byte count is good.');
-        const count = buf.readUInt32BE(offset);
-        if (data.length === (count * 4) + 12) {
-          let pos = 12;
-          const calculated = new Int32Array(count);
-          for (let i = 0; i < count; i++) {
-            calculated[i] = buf.readInt32BE(pos);
-            pos += 4;
-          }
-
-          that.log.debug('Data received: %s', calculated);
-          const items = translate(calculated);
-          that.log.debug('Itemized datalist: %s', items);
-          that.log.debug('Plugin is reading Channel %s', Channel);
-          temperature = items[Channel];
-          that.log.debug('Current temperature is: %s', temperature);
-          callback(null, temperature);
-        }
-      } else {
-        that.log.warn('Error: Luxtronik2 did not confirm command to send data.');
-      }
-
-      luxsock.end();
-    });
-    luxsock.on('connect', function () {
-      luxsock.setNoDelay(true);
-      luxsock.setEncoding('binary');
-      const {Buffer} = require('node:buffer');
-      const buf = Buffer.alloc(4);
-      buf.writeUInt32BE(3004, 0);
-      luxsock.write(buf.toString('binary'), 'binary');
-      buf.writeUInt32BE(0, 0);
-      luxsock.write(buf.toString('binary'), 'binary');
-    });
+    this.client.getTemperature(this.Channel, callback);
   },
 
   getCurrentTemperature(callback) {
     const counter = ++this.counter;
-    this.log.debug('getCurrentTemperature: early callback with cached CurrentTemperature: %s (%d).', this.CurrentTemperature, counter);
+    this.log.debug(
+      'getCurrentTemperature: early callback with cached CurrentTemperature: %s (%d).',
+      this.CurrentTemperature,
+      counter,
+    );
     callback(null, this.CurrentTemperature);
-    this.getTemperature((error, HomeKitState) => {
-      this.CurrentTemperature = HomeKitState;
-      this.temperatureService.getCharacteristic(Characteristic.CurrentTemperature).updateValue(this.CurrentTemperature);
-      this.log.debug('getCurrentTemperature: update CurrentTemperature: %s (%d).', this.CurrentTemperature, counter);
+
+    this.getTemperature((error, temperature) => {
+      if (error) {
+        this.statusActive = false;
+        this.temperatureService.getCharacteristic(Characteristic.StatusActive).updateValue(false);
+        this.log.warn('getCurrentTemperature: failed to update (%d): %s', counter, error.message);
+        return;
+      }
+
+      this.hasValidReading = true;
+      this.statusActive = true;
+      this.CurrentTemperature = temperature;
+      this.temperatureService.getCharacteristic(Characteristic.CurrentTemperature).updateValue(temperature);
+      this.temperatureService.getCharacteristic(Characteristic.StatusActive).updateValue(true);
+      this.log.debug('getCurrentTemperature: update CurrentTemperature: %s (%d).', temperature, counter);
     });
   },
 
-  identify: function (callback) {
+  getStatusActive(callback) {
+    callback(null, this.statusActive);
+  },
+
+  identify(callback) {
     this.log.info('Currently there is no way to help identify the Luxtronik2 device!');
     callback();
   },
 
-  getServices: function () {
+  getServices() {
     const informationService = new Service.AccessoryInformation();
     informationService
       .setCharacteristic(Characteristic.Manufacturer, 'homebridge-luxtronik2')
@@ -216,6 +127,9 @@ Luxtronik2.prototype = {
         maxValue: Number.parseFloat('100'),
       })
       .on('get', this.getCurrentTemperature.bind(this));
+    this.temperatureService
+      .getCharacteristic(Characteristic.StatusActive)
+      .on('get', this.getStatusActive.bind(this));
 
     return [informationService, this.temperatureService];
   },

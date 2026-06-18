@@ -31,3 +31,6 @@ node_modules
 
 # Optional REPL history
 .node_repl_history
+
+# Local deploy script (machine-specific paths)
+scripts/sync-to-homebridge.sh
