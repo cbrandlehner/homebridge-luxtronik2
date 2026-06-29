@@ -6,12 +6,14 @@
     "properties": {
       "name": {
         "title": "Platform Name",
+        "description": "Label for this platform instance in Homebridge.",
         "type": "string",
         "required": true,
         "default": "Luxtronik2"
       },
       "IP": {
         "title": "IP of the Luxtronik2 controller",
+        "description": "IPv4 address of the heat pump controller.",
         "type": "string",
         "required": true,
         "default": "192.168.1.202",
@@ -19,6 +21,7 @@
       },
       "Port": {
         "title": "Port",
+        "description": "Luxtronik2 TCP port. Usually 8888.",
         "type": "integer",
         "default": 8888,
         "maximum": 65535,
