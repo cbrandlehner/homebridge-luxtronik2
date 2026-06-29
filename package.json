@@ -35,48 +35,9 @@
     "type": "git",
     "url": "git+https://github.com/cbrandlehner/homebridge-luxtronik2.git"
   },
-  "devDependencies": {
-    "xo": "^2.0.2"
-  },
   "scripts": {
-    "test": "xo"
-  },
-  "xo": {
-    "rules": {
-      "camelcase": "off",
-      "capitalized-comments": "off",
-      "curly": [
-        "error",
-        "multi-or-nest",
-        "consistent"
-      ],
-      "indent": "off",
-      "max-depth": "off",
-      "no-mixed-spaces-and-tabs": "warn",
-      "no-unused-vars": "error",
-      "no-use-before-define": [
-        "error",
-        {
-          "classes": false
-        }
-      ],
-      "no-useless-escape": "warn",
-      "no-var": "warn",
-      "object-shorthand": [
-        "off",
-        "always",
-        {
-          "ignoreConstructors": true
-        }
-      ],
-      "prefer-arrow-callback": "off",
-      "quote-props": "off",
-      "quotes": "off",
-      "@stylistic/indent": "off",
-      "unicorn/expiring-todo-comments": "off",
-      "unicorn/no-anonymous-default-export": "off",
-      "unicorn/no-for-loop": "off",
-      "unicorn/prefer-module": "off"
-    }
+    "lint:json": "node scripts/lint-json.js",
+    "test": "npm run lint:json && node --test test/**/*.test.js",
+    "test:unit": "node --test test/**/*.test.js"
   }
 }
