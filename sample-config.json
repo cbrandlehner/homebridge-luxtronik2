@@ -6,14 +6,23 @@
     "pin": "111-11-111"
   },
   "description": "This is an example configuration file with all supported devices. You can use this as a template for creating your own configuration file containing devices you actually own.",
-  "platforms": [],
-  "accessories": [
+  "platforms": [
     {
-      "accessory": "homebridge-luxtronik2.temperature",
-      "name": "Luxtronik2",
+      "platform": "homebridge-luxtronik2",
+      "name": "Luxtronik2 Heat Pump",
       "IP": "192.168.1.10",
-      "Port": "8888",
-      "Channel": "5"
+      "Port": 8888,
+      "sensors": [
+        {
+          "name": "Outdoor Temperature",
+          "channel": 5
+        },
+        {
+          "name": "Flow Temperature",
+          "channel": 0
+        }
+      ]
     }
-  ]
+  ],
+  "accessories": []
 }
