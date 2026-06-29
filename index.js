@@ -73,11 +73,24 @@ function Luxtronik2(log, config) {
 
 Luxtronik2.prototype = {
 
+  /**
+   * Read the configured temperature channel from the Luxtronik2 controller.
+   *
+   * @param {(error: Error|null, temperature?: number) => void} callback
+   */
   getTemperature(callback) {
     this.log.debug('getTemperature was called');
     this.client.getTemperature(this.Channel, callback);
   },
 
+  /**
+   * HomeKit getter for CurrentTemperature.
+   *
+   * Responds immediately with the cached value, then fetches fresh data in the
+   * background and updates CurrentTemperature and StatusActive when it arrives.
+   *
+   * @param {(error: Error|null, temperature?: number) => void} callback
+   */
   getCurrentTemperature(callback) {
     const counter = ++this.counter;
     this.log.debug(
@@ -104,15 +117,30 @@ Luxtronik2.prototype = {
     });
   },
 
+  /**
+   * HomeKit getter for StatusActive.
+   *
+   * @param {(error: Error|null, active?: boolean) => void} callback
+   */
   getStatusActive(callback) {
     callback(null, this.statusActive);
   },
 
+  /**
+   * HomeKit identify handler.
+   *
+   * @param {() => void} callback
+   */
   identify(callback) {
     this.log.info('Currently there is no way to help identify the Luxtronik2 device!');
     callback();
   },
 
+  /**
+   * Build and return the HomeKit services exposed by this accessory.
+   *
+   * @returns {import('homebridge').Service[]}
+   */
   getServices() {
     const informationService = new Service.AccessoryInformation();
     informationService
@@ -135,6 +163,11 @@ Luxtronik2.prototype = {
   },
 };
 
+/**
+ * Homebridge plugin entry point.
+ *
+ * @param {import('homebridge').API} homebridge
+ */
 module.exports = function (homebridge) {
   Service = homebridge.hap.Service;
   Characteristic = homebridge.hap.Characteristic;
