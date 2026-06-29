@@ -136,9 +136,33 @@ Additional temperature channels from `channellist.json` can be used manually in 
 
 ## Migrating from 1.x
 
-Version 2.0.0 removes the legacy accessory plugin type.
+### Existing 1.x config keeps working
 
-### Before (1.x)
+Version 2.0 still registers the legacy accessory type `homebridge-luxtronik2.temperature`. If your `config.json` still uses the old format, **you do not need to change anything** to keep your sensor running after upgrading.
+
+Homebridge logs a deprecation warning and recommends moving to the platform format when a legacy accessory loads.
+
+### Optional: convert config.json to platform format
+
+To update your config file automatically, run:
+
+```bash
+node scripts/migrate-config.js /path/to/homebridge/config.json
+```
+
+The script:
+
+- Finds legacy `"accessory": "homebridge-luxtronik2.temperature"` entries
+- Creates equivalent `"platform": "homebridge-luxtronik2"` blocks
+- Groups multiple legacy accessories on the same IP/port into one platform with a `sensors` array
+- Removes the migrated accessory entries
+- Leaves unrelated accessories untouched
+
+Restart Homebridge after migrating.
+
+### Manual migration
+
+#### Before (1.x)
 
 ```json
 {
@@ -170,7 +194,7 @@ Version 2.0.0 removes the legacy accessory plugin type.
 }
 ```
 
-Migration steps:
+Manual migration steps:
 
 1. Remove the old `"accessories"` entry with `"accessory": "homebridge-luxtronik2.temperature"`.
 2. Add the equivalent `"platforms"` entry shown above.
