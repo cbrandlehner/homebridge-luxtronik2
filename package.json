@@ -4,6 +4,13 @@
   "displayName": "Luxtronik2",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "config.schema.json",
+    "lib/",
+    "scripts/migrate-config.js",
+    "scripts/lint-json.js"
+  ],
   "keywords": [
     "luxtronik2",
     "HomeBridge",
