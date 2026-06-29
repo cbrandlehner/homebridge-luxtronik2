@@ -31,8 +31,28 @@ describe('migrateHomebridgeConfig', () => {
       name: 'Luxtronik2',
       IP: '192.168.1.10',
       Port: 8888,
+      sensors: [{name: 'Luxtronik2', channel: 5}],
       Channel: 5,
     });
+  });
+
+  it('preserves sensors array from hybrid accessory entries', () => {
+    const {config} = migrateHomebridgeConfig({
+      platforms: [],
+      accessories: [
+        {
+          accessory: 'homebridge-luxtronik2.temperature',
+          name: 'Luxtronik2',
+          IP: '192.168.1.202',
+          Port: 8888,
+          sensors: [{name: 'Luxtronik2 Temperature', channel: 5}],
+        },
+      ],
+    });
+
+    assert.deepEqual(config.platforms[0].sensors, [
+      {name: 'Luxtronik2 Temperature', channel: 5},
+    ]);
   });
 
   it('migrates accessories into platforms and removes legacy entries', () => {

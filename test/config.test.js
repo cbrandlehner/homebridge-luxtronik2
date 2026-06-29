@@ -29,7 +29,7 @@ describe('normalizePlatformConfig', () => {
     ]);
   });
 
-  it('supports legacy single Channel config', () => {
+  it('supports single Channel config without sensors array', () => {
     const normalized = normalizePlatformConfig({
       name: 'Luxtronik2',
       IP: '192.168.1.10',

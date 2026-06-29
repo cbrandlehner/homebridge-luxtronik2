@@ -42,7 +42,7 @@ Version 2.0.0 is a **platform plugin**. Add one entry under `"platforms"` in `co
 Examples:
 
 - [sample-config.json](sample-config.json) — multi-sensor platform
-- [sample-config.legacy-single-sensor.json](sample-config.legacy-single-sensor.json) — single sensor using `Channel`
+- [sample-config.single-sensor.json](sample-config.single-sensor.json) — single sensor using `Channel`
 
 ### Multi-sensor platform (recommended)
 
@@ -69,7 +69,7 @@ Examples:
 }
 ```
 
-### Single-sensor platform (legacy-style)
+### Single-sensor platform
 
 If you only need one sensor, use `Channel` instead of `sensors`:
 
@@ -136,25 +136,31 @@ Additional temperature channels from `channellist.json` can be used manually in 
 
 ## Migrating from 1.x
 
-### Existing 1.x config keeps working
+Version 2.x is a **platform-only** plugin. It does not load `"accessory": "homebridge-luxtronik2.temperature"` entries.
 
-Version 2.0 still registers the legacy accessory type `homebridge-luxtronik2.temperature`. If your `config.json` still uses the old format, **you do not need to change anything** to keep your sensor running after upgrading.
+If your `config.json` still shows the old accessory block, that is expected until you migrate it. The plugin will not update `config.json` automatically.
 
-Homebridge logs a deprecation warning and recommends moving to the platform format when a legacy accessory loads.
+### Migrate with the included script
 
-### Optional: convert config.json to platform format
+Run this once against your Homebridge config:
 
-To update your config file automatically, run:
+```bash
+npm run migrate-config -- /path/to/homebridge/config.json
+```
+
+Or:
 
 ```bash
 node scripts/migrate-config.js /path/to/homebridge/config.json
 ```
 
+For Docker/Portainer setups, the path is often `/homebridge/config.json` inside the container, or `~/docker/homebridge/config.json` on the host.
+
 The script:
 
-- Finds legacy `"accessory": "homebridge-luxtronik2.temperature"` entries
+- Finds `"accessory": "homebridge-luxtronik2.temperature"` entries
 - Creates equivalent `"platform": "homebridge-luxtronik2"` blocks
-- Groups multiple legacy accessories on the same IP/port into one platform with a `sensors` array
+- Groups multiple old accessories on the same IP/port into one platform with a `sensors` array
 - Removes the migrated accessory entries
 - Leaves unrelated accessories untouched
 

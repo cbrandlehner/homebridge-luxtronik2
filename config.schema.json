@@ -28,7 +28,7 @@
         "required": true
       },
       "Channel": {
-        "title": "Temperature to read (legacy single-sensor config)",
+        "title": "Temperature to read (single-sensor config)",
         "description": "Used when the sensors array is not configured.",
         "type": "integer",
         "oneOf": [

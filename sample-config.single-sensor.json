@@ -5,7 +5,7 @@
     "port": 51826,
     "pin": "111-11-111"
   },
-  "description": "homebridge-luxtronik2 v2.0 single-sensor example using Channel instead of sensors. Equivalent to the old 1.x accessory config after migration.",
+  "description": "homebridge-luxtronik2 v2 platform plugin single-sensor example using Channel instead of sensors.",
   "platforms": [
     {
       "platform": "homebridge-luxtronik2",

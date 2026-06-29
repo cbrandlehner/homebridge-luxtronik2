@@ -1,6 +1,6 @@
 {
   "name": "homebridge-luxtronik2",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Homebridge module to retrieve data from a luxtronik2 controller for heat pumps",
   "main": "index.js",
   "keywords": [
@@ -38,6 +38,7 @@
   "scripts": {
     "lint:json": "node scripts/lint-json.js",
     "test": "npm run lint:json && node --test test/**/*.test.js",
-    "test:unit": "node --test test/**/*.test.js"
+    "test:unit": "node --test test/**/*.test.js",
+    "migrate-config": "node scripts/migrate-config.js"
   }
 }
