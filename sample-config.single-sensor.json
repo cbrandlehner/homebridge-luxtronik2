@@ -5,7 +5,7 @@
     "port": 51826,
     "pin": "111-11-111"
   },
-  "description": "homebridge-luxtronik2 platform plugin with one temperature sensor.",
+  "description": "homebridge-luxtronik2 platform plugin with one temperature sensor. Use platforms (not accessories) for child-bridge and Homebridge Matter compatibility.",
   "platforms": [
     {
       "platform": "homebridge-luxtronik2",

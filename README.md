@@ -1,5 +1,6 @@
 [![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
+[![GitHub stars](https://img.shields.io/github/stars/cbrandlehner/homebridge-luxtronik2?style=social&label=Star%20on%20GitHub)](https://github.com/cbrandlehner/homebridge-luxtronik2)
 [![node-current](https://img.shields.io/node/v/homebridge-luxtronik2)](https://github.com/cbrandlehner/homebridge-luxtronik2)
 [![npm](https://img.shields.io/npm/dt/homebridge-luxtronik2.svg)](https://www.npmjs.com/package/homebridge-luxtronik2)
 [![npm](https://img.shields.io/npm/l/homebridge-luxtronik2.svg)](https://github.com/cbrandlehner/homebridge-luxtronik2/blob/master/LICENSE)
@@ -24,6 +25,8 @@ Open the configuration UI, search for "Luxtronik2", and install the plugin.
 
 Restart Homebridge after configuration changes.
 
+If this plugin is useful, please **[star the repository on GitHub](https://github.com/cbrandlehner/homebridge-luxtronik2)**. Stars help others discover the plugin and show support for continued maintenance. You will also see a link at the bottom of the plugin settings screen in Homebridge Config UI.
+
 ## Usage
 
 Each configured sensor appears as a separate **Temperature Sensor** accessory in the Home app.
@@ -37,7 +40,9 @@ All sensors on the same controller share one TCP client. Requests are serialized
 
 ## Configuration
 
-Version 2.0.0 is a **platform plugin**. Add one entry under `"platforms"` in `config.json`.
+Version 2.0.0 is a **platform plugin**. Add one entry under `"platforms"` in `config.json` (not under `"accessories"`).
+
+Platform plugins are required for [child-bridges](https://github.com/homebridge/homebridge/wiki/Child-Bridges) and for [Homebridge 2.0 Matter support](https://developers.homebridge.io/homebridge/#matter-support). See [Why migrate to a platform plugin?](#why-migrate-to-a-platform-plugin) below.
 
 Examples:
 
@@ -87,37 +92,55 @@ For one sensor, use a `sensors` array with a single entry. See [sample-config.si
 
 `channel` values are **compacted indices** produced by the plugin decoder. They are **not** the raw keys from `lib/channellist.json`.
 
-The config UI and schema list the most common temperature channels:
+The config UI and schema list the most common temperature channels. Names come from the Luxtronik2 firmware (German abbreviations). Not every sensor is present on every heat pump — pick the channel that matches a value you see on the controller display or web interface.
 
-| Channel | Sensor name |
-|---------|-------------|
-| 0 | Temperatur_TVL |
-| 1 | Temperatur_TRL |
-| 2 | Sollwert_TRL_HZ |
-| 3 | Temperatur_TRL_ext |
-| 4 | Temperatur_THG |
-| 5 | Temperatur_TA |
-| 6 | Mitteltemperatur |
-| 7 | Temperatur_TBW |
-| 8 | Einst_BWS_akt |
-| 9 | Temperatur_TWE |
-| 10 | Temperatur_TWA |
-| 11 | Temperatur_TFB1 |
-| 12 | Sollwert_TVL_MK |
-| 13 | Temperatur_RFV |
-| 14 | Temperatur_TFB2 |
-| 15 | Sollwert_TVL_MK2 |
-| 16 | Temperatur_TSK |
-| 17 | Temperatur_TSS |
-| 18 | Temperatur_TEE |
+| Channel | Sensor name | Meaning |
+|---------|-------------|---------|
+| 0 | Temperatur_TVL | Heating circuit flow (supply) temperature — *Vorlauf* |
+| 1 | Temperatur_TRL | Heating circuit return temperature — *Rücklauf* |
+| 2 | Sollwert_TRL_HZ | Heating circuit return setpoint — *Sollwert* (target), *HZ* (heating) |
+| 3 | Temperatur_TRL_ext | Buffer/storage tank return temperature |
+| 4 | Temperatur_THG | Compressor hot-gas temperature — *Heißgas* |
+| 5 | Temperatur_TA | Outdoor air temperature — *Außen* (most common choice) |
+| 6 | Mitteltemperatur | 24-hour average outdoor temperature (used for heating curve/limit) |
+| 7 | Temperatur_TBW | Domestic hot water temperature (actual) — *Brauchwasser* |
+| 8 | Einst_BWS_akt | Domestic hot water target temperature (active setpoint) — *Brauchwasser Sollwert* |
+| 9 | Temperatur_TWE | Heat source inlet temperature (e.g. brine or intake air) — *Wärmequelle Ein* |
+| 10 | Temperatur_TWA | Heat source outlet temperature — *Wärmequelle Aus* |
+| 11 | Temperatur_TFB1 | Mixing circuit 1 flow temperature — *FB* (floor/mixing circuit) |
+| 12 | Sollwert_TVL_MK | Mixing circuit 1 flow setpoint — *MK* (mixing circuit) |
+| 13 | Temperatur_RFV | Room temperature from room station 1 — *Raumfühler* |
+| 14 | Temperatur_TFB2 | Mixing circuit 2 flow temperature |
+| 15 | Sollwert_TVL_MK2 | Mixing circuit 2 flow setpoint |
+| 16 | Temperatur_TSK | Solar collector temperature — *Solar Kollektor* |
+| 17 | Temperatur_TSS | Solar storage tank temperature — *Solar Speicher* |
+| 18 | Temperatur_TEE | External heat source temperature — *externe Energiequelle* |
 
 Additional temperature channels from `channellist.json` can be used manually in `config.json` if needed.
+
+## Why migrate to a platform plugin?
+
+Version 1.x registered each sensor as a standalone **accessory plugin** (`"accessory": "homebridge-luxtronik2.temperature"`). That worked for HomeKit, but it cannot participate in newer Homebridge features that rely on **platform plugins** and **child-bridges**.
+
+### Child-bridges
+
+A [child-bridge](https://github.com/homebridge/homebridge/wiki/Child-Bridges) lets a platform plugin run as its own separate Homebridge bridge instead of sharing the main bridge. Each child-bridge gets its own pairing PIN, accessory cache, and (optionally) its own Matter endpoint. That keeps your main bridge uncluttered and avoids HomeKit's per-bridge accessory limit.
+
+Child-bridges are configured on a platform entry with a `_bridge` block in `config.json`. Only **platform** plugins support this — legacy accessory plugins cannot run as child-bridges.
+
+### Homebridge Matter support
+
+[Homebridge 2.0](https://developers.homebridge.io/homebridge/#matter-support) can expose accessories over [Matter](https://csa-iot.org/all-solutions/matter/) in addition to HomeKit. Matter is **opt-in per bridge**: you add a `matter` block to the main `bridge` config and/or to a platform's `_bridge` (child-bridge) config. Each Matter-enabled bridge advertises separately and is paired with its own QR code.
+
+Because Matter is configured at the bridge level, platform plugins that can run as child-bridges are the natural way to expose plugin accessories to Matter controllers (Apple Home, Google Home, Alexa, SmartThings, and others). Legacy single-accessory plugins do not fit this model.
+
+Migrating from 1.x accessory entries to a 2.x platform entry is therefore **required** — not just a config tidy-up — if you want this plugin to work with child-bridges and future Homebridge Matter support.
 
 ## Migrating from 1.x
 
 Version 2.x is a **platform-only** plugin. It does not load `"accessory": "homebridge-luxtronik2.temperature"` entries.
 
-If your `config.json` still shows the old accessory block, that is expected until you migrate it. The plugin will not update `config.json` automatically.
+If your `config.json` still shows the old accessory block, that is expected until you migrate it. The plugin will not update `config.json` automatically. After migrating, you can optionally enable a [child-bridge](https://github.com/homebridge/homebridge/wiki/Child-Bridges) by adding a `_bridge` block to your platform config.
 
 ### Migrate with the included script
 
@@ -213,6 +236,12 @@ Then restart Homebridge (and refresh the Config UI).
 - Enable Homebridge debug logging with `homebridge -D`.
 - Check that `StatusActive` becomes `true` after the first successful read.
 - Verify `IP`, `Port`, and `channel` values. `Port` and `channel` must be numbers, not strings.
+
+## Support
+
+- **[Star on GitHub](https://github.com/cbrandlehner/homebridge-luxtronik2)** — the quickest way to support the project
+- [Report issues](https://github.com/cbrandlehner/homebridge-luxtronik2/issues) or ask questions on the issue tracker
+- [Sponsor the maintainer](https://github.com/sponsors/cbrandlehner) (optional)
 
 ## Development
 
