@@ -1,8 +1,11 @@
 {
   "pluginAlias": "homebridge-luxtronik2",
   "pluginType": "platform",
+  "singular": true,
+  "header": "Configure one Luxtronik2 controller and expose one or more temperature sensors.",
   "schema": {
     "type": "object",
+    "additionalProperties": false,
     "properties": {
       "name": {
         "title": "Platform Name",
@@ -12,53 +15,30 @@
         "default": "Luxtronik2"
       },
       "IP": {
-        "title": "IP of the Luxtronik2 controller",
-        "description": "IPv4 address of the heat pump controller.",
+        "title": "Controller IP",
+        "description": "IPv4 address of the Luxtronik2 heat pump controller.",
         "type": "string",
         "required": true,
         "default": "192.168.1.202",
         "format": "hostname"
       },
       "Port": {
-        "title": "Port",
+        "title": "Controller Port",
         "description": "Luxtronik2 TCP port. Usually 8888.",
         "type": "integer",
         "default": 8888,
         "maximum": 65535,
         "required": true
       },
-      "Channel": {
-        "title": "Temperature to read (single-sensor config)",
-        "description": "Used when the sensors array is not configured.",
-        "type": "integer",
-        "oneOf": [
-          { "title": "Temperatur_TVL", "enum": [0] },
-          { "title": "Temperatur_TRL", "enum": [1] },
-          { "title": "Sollwert_TRL_HZ", "enum": [2] },
-          { "title": "Temperatur_TRL_ext", "enum": [3] },
-          { "title": "Temperatur_THG", "enum": [4] },
-          { "title": "Temperatur_TA", "enum": [5] },
-          { "title": "Mitteltemperatur", "enum": [6] },
-          { "title": "Temperatur_TBW", "enum": [7] },
-          { "title": "Einst_BWS_akt", "enum": [8] },
-          { "title": "Temperatur_TWE", "enum": [9] },
-          { "title": "Temperatur_TWA", "enum": [10] },
-          { "title": "Temperatur_TFB1", "enum": [11] },
-          { "title": "Sollwert_TVL_MK", "enum": [12] },
-          { "title": "Temperatur_RFV", "enum": [13] },
-          { "title": "Temperatur_TFB2", "enum": [14] },
-          { "title": "Sollwert_TVL_MK2", "enum": [15] },
-          { "title": "Temperatur_TSK", "enum": [16] },
-          { "title": "Temperatur_TSS", "enum": [17] },
-          { "title": "Temperatur_TEE", "enum": [18] }
-        ]
-      },
       "sensors": {
         "title": "Temperature Sensors",
-        "description": "Expose one or more temperature sensors from the same controller.",
+        "description": "Each sensor becomes its own HomeKit temperature accessory.",
         "type": "array",
+        "required": true,
+        "minItems": 1,
         "items": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "name": {
               "title": "Sensor Name",
@@ -68,8 +48,9 @@
             },
             "channel": {
               "title": "Temperature Channel",
-              "description": "Compacted channel index from channellist.json.",
+              "description": "Compacted channel index. Channel 5 is outdoor air (Temperatur_TA).",
               "type": "integer",
+              "required": true,
               "oneOf": [
                 { "title": "Temperatur_TVL", "enum": [0] },
                 { "title": "Temperatur_TRL", "enum": [1] },

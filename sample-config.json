@@ -5,7 +5,7 @@
     "port": 51826,
     "pin": "111-11-111"
   },
-  "description": "homebridge-luxtronik2 v2.0 platform plugin example. Use a platforms entry (not accessories). Each sensor in sensors becomes its own HomeKit temperature accessory. For a single sensor, omit sensors and set Channel instead (see README).",
+  "description": "homebridge-luxtronik2 platform plugin example. Add under platforms (not accessories). Each entry in sensors becomes its own HomeKit temperature accessory.",
   "platforms": [
     {
       "platform": "homebridge-luxtronik2",

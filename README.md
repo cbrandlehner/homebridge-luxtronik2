@@ -42,9 +42,9 @@ Version 2.0.0 is a **platform plugin**. Add one entry under `"platforms"` in `co
 Examples:
 
 - [sample-config.json](sample-config.json) — multi-sensor platform
-- [sample-config.single-sensor.json](sample-config.single-sensor.json) — single sensor using `Channel`
+- [sample-config.single-sensor.json](sample-config.single-sensor.json) — single sensor
 
-### Multi-sensor platform (recommended)
+### Example
 
 ```json
 {
@@ -69,25 +69,7 @@ Examples:
 }
 ```
 
-### Single-sensor platform
-
-If you only need one sensor, use `Channel` instead of `sensors`:
-
-```json
-{
-  "platforms": [
-    {
-      "platform": "homebridge-luxtronik2",
-      "name": "Luxtronik2",
-      "IP": "192.168.1.10",
-      "Port": 8888,
-      "Channel": 5
-    }
-  ]
-}
-```
-
-The platform `name` becomes the HomeKit accessory name.
+For one sensor, use a `sensors` array with a single entry. See [sample-config.single-sensor.json](sample-config.single-sensor.json).
 
 ### Configuration reference
 
@@ -97,12 +79,9 @@ The platform `name` becomes the HomeKit accessory name.
 | `name` | yes | string | `Luxtronik2` | Platform label in Homebridge |
 | `IP` | yes | string | — | Controller IP address |
 | `Port` | yes | integer | `8888` | Controller TCP port |
-| `sensors` | no* | array | — | List of sensors to expose |
+| `sensors` | yes | array | — | One or more sensors to expose |
 | `sensors[].name` | yes | string | — | HomeKit accessory name |
 | `sensors[].channel` | yes | integer | — | Compacted temperature channel index |
-| `Channel` | no* | integer | `5` | Single-sensor fallback when `sensors` is omitted |
-
-\* Provide either `sensors` or `Channel`.
 
 ### Channel numbers
 
@@ -184,7 +163,7 @@ Restart Homebridge after migrating.
 }
 ```
 
-### After (2.0)
+### After (2.x)
 
 ```json
 {
@@ -194,7 +173,9 @@ Restart Homebridge after migrating.
       "name": "Luxtronik2",
       "IP": "192.168.1.10",
       "Port": 8888,
-      "Channel": 5
+      "sensors": [
+        { "name": "Luxtronik2", "channel": 5 }
+      ]
     }
   ]
 }
@@ -207,7 +188,24 @@ Manual migration steps:
 3. Restart Homebridge.
 4. Remove stale accessories from the Home app if Homebridge shows duplicates.
 
-To expose multiple temperatures from one controller, replace `Channel` with a `sensors` array.
+To expose multiple temperatures from one controller, add more entries to `sensors`.
+
+## Homebridge Config UI still shows the old accessory?
+
+The UI reads the **installed plugin files**, not just `config.json`.
+
+If you still see `homebridge-luxtronik2.temperature` as an accessory option, one of these is usually the cause:
+
+1. **Stale plugin code in `node_modules`** — an older build that still registered the legacy accessory type
+2. **Old version pin** — `~/docker/homebridge/package.json` still listing `"homebridge-luxtronik2": "1.6.1"`
+3. **Cached UI metadata** — restart Homebridge after updating the plugin
+
+After upgrading, confirm the installed plugin contains:
+
+- `config.schema.json` with `"pluginType": "platform"`
+- `index.js` that only calls `registerPlatform(...)`
+
+Then restart Homebridge (and refresh the Config UI).
 
 ## Troubleshooting
 

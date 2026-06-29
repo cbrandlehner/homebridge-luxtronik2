@@ -32,7 +32,6 @@ describe('migrateHomebridgeConfig', () => {
       IP: '192.168.1.10',
       Port: 8888,
       sensors: [{name: 'Luxtronik2', channel: 5}],
-      Channel: 5,
     });
   });
 

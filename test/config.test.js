@@ -29,17 +29,16 @@ describe('normalizePlatformConfig', () => {
     ]);
   });
 
-  it('supports single Channel config without sensors array', () => {
-    const normalized = normalizePlatformConfig({
-      name: 'Luxtronik2',
-      IP: '192.168.1.10',
-      Port: 8888,
-      Channel: 5,
-    }, log);
-
-    assert.deepEqual(normalized.sensors, [
-      {name: 'Luxtronik2', channel: 5},
-    ]);
+  it('requires a non-empty sensors array', () => {
+    assert.throws(
+      () => normalizePlatformConfig({
+        name: 'Luxtronik2',
+        IP: '192.168.1.10',
+        Port: 8888,
+        Channel: 5,
+      }, log),
+      /sensors/,
+    );
   });
 
   it('rejects invalid ports', () => {
