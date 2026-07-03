@@ -249,4 +249,15 @@ Then restart Homebridge (and refresh the Config UI).
 npm test
 ```
 
-Tests run JSON validation and Node.js unit tests for protocol parsing, config normalization, and the TCP client.
+Tests run JSON validation and Node.js unit tests for:
+
+- Luxtronik2 protocol parsing and TCP client (`test/luxtronik2-client.test.js`)
+- Platform config normalization (`test/config.test.js`)
+- Legacy config migration (`test/migrate-config.test.js`)
+- Channel metadata (`test/channels.test.js`)
+- Platform accessory discovery (`test/platform.test.js`)
+- Accessory service wiring (`test/accessory.test.js`)
+- Temperature sensor handler behavior (`test/sensor-handler.test.js`)
+- Shared utilities (`test/tools.test.js`)
+
+See [CHANGELOG.md](CHANGELOG.md) for release notes.

@@ -1,9 +1,7 @@
 'use strict';
 
 const {Buffer} = require('node:buffer');
-
-const COMMAND_CONFIRM = 3004;
-const HEADER_SIZE = 12;
+const {COMMAND_CONFIRM, HEADER_SIZE} = require('../lib/constants.js');
 
 /**
  * Build a Luxtronik2 protocol response buffer for tests.
