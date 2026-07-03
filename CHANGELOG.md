@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Auto-migration on plugin load** ([#264](https://github.com/cbrandlehner/homebridge-luxtronik2/issues/264)) — Legacy `homebridge-luxtronik2.temperature` accessory entries in `config.json` are migrated to platform config automatically when the plugin starts. A legacy accessory shim prevents the recurring startup error until Homebridge is restarted.
+- **`lib/auto-migrate-config.js`** — Reads and writes `config.json` via `api.user.configPath()`, reusing `migrateHomebridgeConfig()`.
+- **`lib/legacy-accessory.js`** — No-op shim for deprecated v1.x accessory entries still present in the in-memory config on the first boot after upgrade.
+- **`test/auto-migrate-config.test.js`**, **`test/legacy-accessory.test.js`** — Coverage for file-based migration and the legacy shim.
+
 ## [2.1.2] - 2026-07-03
 
 ### Changed

@@ -140,7 +140,7 @@ Migrating from 1.x accessory entries to a 2.x platform entry is therefore **requ
 
 Version 2.x is a **platform-only** plugin. It does not load `"accessory": "homebridge-luxtronik2.temperature"` entries.
 
-If your `config.json` still shows the old accessory block, that is expected until you migrate it. The plugin will not update `config.json` automatically. After migrating, you can optionally enable a [child-bridge](https://github.com/homebridge/homebridge/wiki/Child-Bridges) by adding a `_bridge` block to your platform config.
+If your `config.json` still shows the old accessory block, the plugin **auto-migrates** legacy `homebridge-luxtronik2.temperature` entries to platform config on startup and logs a message asking you to restart Homebridge. Until that restart, a compatibility shim prevents the recurring startup error. You can also migrate manually with the script below. After migrating, you can optionally enable a [child-bridge](https://github.com/homebridge/homebridge/wiki/Child-Bridges) by adding a `_bridge` block to your platform config.
 
 ### Migrate with the included script
 
